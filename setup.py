@@ -21,13 +21,8 @@ setup(name='daedalus',
 
       # NOTE: vivarium is not available via conda so needs to be installed via pip
       install_requires=['distutils_pytest',
-                        'humanleague',
-                        'ukpopulation',
                         'vivarium',
                         'numpy'],
-
-      dependency_links=['git+git://github.com/BenjaminIsaac0111/humanleague.git#egg=humanleague',
-                        'git+git://github.com/BenjaminIsaac0111/UKCensusAPI.git#egg=ukcensusapi'],
 
       test_suite='nose.collector',
       tests_require=['nose'],
