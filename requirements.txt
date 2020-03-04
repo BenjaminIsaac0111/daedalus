@@ -2,7 +2,6 @@ beautifulsoup4==4.8.1
 certifi==2019.11.28
 chardet==3.0.4
 Click==7.0
-daedalus==0.0.1
 decorator==4.4.2
 distutils-pytest==0.1
 et-xmlfile==1.0.1
