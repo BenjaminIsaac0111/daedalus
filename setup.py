@@ -22,7 +22,6 @@ setup(name='daedalus',
       # NOTE: vivarium is not available via conda so needs to be installed via pip
       install_requires=['distutils_pytest',
                         'humanleague',
-                        'ukcensusapi',
                         'ukpopulation',
                         'vivarium',
                         'numpy'],

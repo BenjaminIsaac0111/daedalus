@@ -9,7 +9,7 @@ matrix:
         - pip install -U distutils-pytest setuptools
         - ./setup.py install
       script:
-        - python setup.py test
+        - ./setup.py test
 
   allow_failures:
     - r: oldrel
