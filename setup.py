@@ -24,6 +24,9 @@ setup(name='daedalus',
                         'vivarium',
                         'numpy'],
 
+      dependency_links=['git+git://github.com/BenjaminIsaac0111/humanleague.git#egg=humanleague',
+                        'git+git://github.com/BenjaminIsaac0111/UKCensusAPI.git#egg=ukcensusapi'],
+
       test_suite='nose.collector',
       tests_require=['nose'],
       python_requires='>=3'
