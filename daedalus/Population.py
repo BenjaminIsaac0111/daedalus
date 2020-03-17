@@ -23,59 +23,16 @@ class Population:
         self.name = 'base_population'
 
     def setup(self, builder: Builder):
-        self.config = builder.configuration
+        self.columns = ['HID', 'Area', 'LC4402_C_TYPACCOM', 'QS420_CELL', 'LC4402_C_TENHUK11', 'LC4408_C_AHTHUK11']
 
-        self.with_common_random_numbers = bool(self.config.randomness.key_columns)
-        self.register = builder.randomness.register_simulants
+        self.population_view = builder.population.get_view(self.columns)
 
-        if self.with_common_random_numbers and not ['entrance_time', 'age'] == self.config.randomness.key_columns:
-            raise ValueError("If running with CRN, you must specify ['entrance_time', 'age'] as"
-                             "the randomness key columns.")
-
-        self.age_randomness = builder.randomness.get_stream('age_initialization',
-                                                            for_initialization=self.with_common_random_numbers)
-        self.sex_randomness = builder.randomness.get_stream('sex_initialization')
-
-        columns_created = ['age', 'sex', 'alive', 'entrance_time']
-        builder.population.initializes_simulants(self.on_initialize_simulants, creates_columns=columns_created)
-
-        self.population_view = builder.population.get_view(columns_created)
-
-        # This say that at each time step, age the simulants.
-        builder.event.register_listener('time_step', self.age_simulants)
-
+        builder.population.initializes_simulants(self.on_initialize_simulants, creates_columns=self.columns)
 
     # This will be modified to read our synthetic population data from phase 2 of SPENSER.
     def on_initialize_simulants(self, pop_data: SimulantData):
-        age_start = self.config.population.age_start
-        age_end = self.config.population.age_end
+        df = pd.read_csv('hh_Ealing_OA11_2011.csv')
 
-        if age_start == age_end:
-            age_window = pop_data.creation_window / pd.Timedelta(days=365)
-        else:
-            age_window = age_end - age_start
+        df = df[self.columns]
 
-        age_draw = self.age_randomness.get_draw(pop_data.index)
-        age = age_start + age_draw * age_window
-
-        if self.with_common_random_numbers:
-            population = pd.DataFrame({'entrance_time': pop_data.creation_time,
-                                       'age': age.values}, index=pop_data.index)
-            self.register(population)
-            population['sex'] = self.sex_randomness.choice(pop_data.index, ['Male', 'Female'])
-            population['alive'] = 'alive'
-        else:
-            population = pd.DataFrame(
-                {'age': age.values,
-                 'sex': self.sex_randomness.choice(pop_data.index, ['Male', 'Female']),
-                 'alive': pd.Series('alive', index=pop_data.index),
-                 'entrance_time': pop_data.creation_time},
-                index=pop_data.index)
-            print("Working..")
-
-        self.population_view.update(population)
-
-    def age_simulants(self, event: Event):
-        population = self.population_view.get(event.index, query="alive == 'alive'")
-        population['age'] += event.step_size / pd.Timedelta(days=365)
-        self.population_view.update(population)
+        self.population_view.update(df)
