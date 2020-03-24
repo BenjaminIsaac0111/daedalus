@@ -1,0 +1,23 @@
+components:
+    daedalus.population:
+      - Population()
+
+configuration:
+    randomness:
+        key_columns: ['entrance_time', 'age']
+    time:
+        start:
+            year: 2011
+            month: 1
+            day: 1
+        end:
+            year: 2011
+            month: 6
+            day: 1
+        step_size: 1  # Days
+    population:
+        population_size: 6068 # 0 Base
+        age_start: 0
+        age_end: 30
+    mortality:
+        mortality_rate: 0
