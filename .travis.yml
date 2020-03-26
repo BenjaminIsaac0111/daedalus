@@ -11,14 +11,18 @@ matrix:
         - "3.8"
         - "3.8-dev"
       install:
-        - sudo pip install -U distutils-pytest setuptools
-        - sudo python setup.py build
-        - sudo python setup.py install
+        - pip install unittest
+        - pip install git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague
+        - pip install git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi
+        - pip install git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth
+        - pip install git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation
+        - pip install .
       script:
-        - sudo pip install git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague
-        - sudo pip install git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi
-        - sudo pip install git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth
-        - sudo pip install git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation
-        - python setup.py test
+        - python -m unittest tests/test_all.py
 
 warnings_are_errors: false
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
