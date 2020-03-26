@@ -1,3 +1,5 @@
+# NOTE: This file might need some auto generator or builder before the simulation.
+# For example, the population size depends the population file being read into the simulation so this nee setting before.
 components:
     daedalus.population:
       - Population()

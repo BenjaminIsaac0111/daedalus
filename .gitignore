@@ -130,3 +130,5 @@ dmypy.json
 
 #Idea files
 .idea/
+/data/.~lock.ass_E09000001_MSOA11_2011.csv#
+/data/.~lock.ass_hh_E09000001_OA11_2011.csv#

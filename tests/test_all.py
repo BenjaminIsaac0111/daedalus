@@ -9,7 +9,7 @@ import daedalus.assignment as Assignment
 
 class Test(unittest.TestCase):
 
-    def test_static(self):
+    def test_1_static(self):
         region = "E09000001"
         resolution = "MSOA11"
         variant = "ppp"
@@ -17,7 +17,7 @@ class Test(unittest.TestCase):
         microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", True)
         microsim.run(2011, 2011)
 
-    def test_static_h(self):
+    def test_2_static_h(self):
         region = "E09000001"
         resolution = "OA11"
         # requires output from upstream model household
@@ -29,7 +29,7 @@ class Test(unittest.TestCase):
                                                      downstream_dir)
         microsim.run(2011, 2011)
 
-    def test_z_assign(self):
+    def test_3_assignment(self):
         region = "E09000001"
         h_res = "OA11"
         p_res = "MSOA11"
@@ -41,7 +41,7 @@ class Test(unittest.TestCase):
         assign.run()
         # self.assertTrue(False)
 
-    def test_simulation(self):
+    def test_4_simulation(self):
         # TODO is there a way to set the spec with the population size before running?
         sim = InteractiveContext('config/model_specification.yaml')
         print(sim.get_population().head(100))
