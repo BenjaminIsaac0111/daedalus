@@ -11,10 +11,13 @@ matrix:
         - "3.8"
         - "3.8-dev"
       install:
-        - pip install -U distutils-pytest setuptools
-        - ./setup.py install
+        - sudo pip install -U distutils-pytest setuptools
+        - sudo pip install git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague
+        - sudo pip install git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi
+        - sudo pip install git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth
+        - sudo pip install git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation
       script:
-        - ./setup.py test
+        - python setup.py test
 
   allow_failures:
     - r: oldrel
