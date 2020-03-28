@@ -17,7 +17,7 @@ class Test(unittest.TestCase):
         microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", True)
         microsim.run(2011, 2011)
 
-    def test_2_static_h(self):
+    def test_2_static_household(self):
         region = "E09000001"
         resolution = "OA11"
         # requires output from upstream model household
