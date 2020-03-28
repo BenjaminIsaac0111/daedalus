@@ -4,6 +4,8 @@ sudo: false
 matrix:
   include:
     - language: python
+      env:
+        - NOMIS_API_KEY=DUMMY
       python:
         - "3.6"
         - "3.7"
