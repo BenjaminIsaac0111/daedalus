@@ -20,9 +20,9 @@ class Test(unittest.TestCase):
     def test_2_static_household(self):
         region = "E09000001"
         resolution = "OA11"
-        # requires output from upstream model household
         cache_dir = "./cache"
-        upstream_dir = "../household_microsynth/data/"
+        # Normally requires output from upstream model household_micro
+        upstream_dir = "./tests/test_data"
         input_dir = "./persistent_data/"
         downstream_dir = "./data/"
         microsim = StaticH.SequentialMicrosynthesisH(region, resolution, cache_dir, upstream_dir, input_dir,
