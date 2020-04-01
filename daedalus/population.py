@@ -31,7 +31,7 @@ class Population:
 
     # This will be modified to read our synthetic population data from phase 2 of SPENSER.
     def on_initialize_simulants(self, pop_data: SimulantData):
-        df = pd.read_csv('data/ass_E09000001_MSOA11_2011.csv')
+        df = pd.read_csv('./tests/data/ass_E09000001_MSOA11_2011.csv')
 
         len(df)
 
