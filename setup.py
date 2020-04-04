@@ -20,11 +20,12 @@ setup(name='daedalus',
       zip_safe=False,
 
       # NOTE: vivarium is not available via conda so needs to be installed via pip
-      install_requires=['distutils_pytest', 'vivarium', 'ukcensusapi', 'ukpopulation'],
-      dependency_links=['git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague',
-                        'git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi',
-                        'git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth',
-                        'git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation'],
+      install_requires=['distutils_pytest', 'vivarium',
+                        'ukcensusapi @ git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi',
+                        'ukpopulation @ git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation',
+                        'humanleague @ git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague',
+                        'household_microsynth @ git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth',
+                        'microsimulation @ git+https://github.com/nismod/microsimulation.git@Development#egg=microsimulation'],
 
       test_suite='nose.collector',
       tests_require=['nose'],
