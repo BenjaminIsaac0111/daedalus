@@ -6,10 +6,6 @@ from vivarium.framework.event import Event
 
 
 class Population:
-    """
-    This is a common pattern found in Vivarium. Configuration is declared as a class variable for components. In this case
-    it defines a parameter space for age when the population is initially generated.
-    """
     configuration_defaults = {
         'population': {
             # The range of ages to be generated in the initial population
@@ -23,18 +19,22 @@ class Population:
         self.name = 'base_population'
 
     def setup(self, builder: Builder):
-        self.columns = ['PID', 'Area', 'DC1117EW_C_SEX', 'DC1117EW_C_AGE', 'DC2101EW_C_ETHPUK11']
+
+        self.columns = ['PID', 'Area', 'DC1117EW_C_SEX', 'DC1117EW_C_AGE', 'DC2101EW_C_ETHPUK11', 'entrance_time']
 
         self.population_view = builder.population.get_view(self.columns)
 
         builder.population.initializes_simulants(self.on_initialize_simulants, creates_columns=self.columns)
 
-    # This will be modified to read our synthetic population data from phase 2 of SPENSER.
     def on_initialize_simulants(self, pop_data: SimulantData):
-        df = pd.read_csv('./tests/data/ass_E09000001_MSOA11_2011.csv')
+        population = pd.read_csv('data/Testfile.csv')
+        population['alive'] = 'alive'
+        population['entrance_time'] = pop_data.creation_time
+        population = population[self.columns]
 
-        len(df)
+        self.population_view.update(population)
 
-        df = df[self.columns]
-
-        self.population_view.update(df)
+    def age_simulants(self, event: Event):
+        population = self.population_view.get(event.index, query="alive == 'alive'")
+        population['DC1117EW_C_AGE'] += event.step_size / pd.Timedelta(days=365)
+        self.population_view.update(population)

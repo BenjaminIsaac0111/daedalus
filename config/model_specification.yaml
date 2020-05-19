@@ -2,24 +2,25 @@
 # For example, the population size depends the population file being read into the simulation so this nee setting before.
 components:
     daedalus.population:
-      - Population()
-
+        - Population()
+    daedalus.mortality:
+        - Mortality()
 configuration:
     randomness:
-        key_columns: ['entrance_time', 'age']
+        key_columns: ['entrance_time', 'DC1117EW_C_AGE']
     time:
         start:
             year: 2011
             month: 1
             day: 1
         end:
-            year: 2011
-            month: 6
+            year: 2012
+            month: 1
             day: 1
         step_size: 1  # Days
     population:
-        population_size: 6068 # 0 Base
+        population_size: 0 # 1 Base
         age_start: 0
-        age_end: 30
+        age_end: 100
     mortality:
-        mortality_rate: 0
+        mortality_rate: 0.99
