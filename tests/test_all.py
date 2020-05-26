@@ -10,45 +10,45 @@ import pandas as pd
 
 class Test(unittest.TestCase):
 
-    def test_static_Bradford(self):
-        region = "E08000032"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
-
-    def test_static_Calderdale(self):
-        region = "E08000033"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
-
-    def test_static_Kirklees(self):
-        region = "E08000034"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
-
-    def test_static_leeds(self):
-        region = "E08000035"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
-
-    def test_static_wakefield(self):
-        region = "E08000036"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
+    # def test_static_Bradford(self):
+    #     region = "E08000032"
+    #     resolution = "MSOA11"
+    #     variant = "ppp"
+    #     cache = "./cache"
+    #     microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+    #     microsim.run(2011, 2012)
+    #
+    # def test_static_Calderdale(self):
+    #     region = "E08000033"
+    #     resolution = "MSOA11"
+    #     variant = "ppp"
+    #     cache = "./cache"
+    #     microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+    #     microsim.run(2011, 2012)
+    #
+    # def test_static_Kirklees(self):
+    #     region = "E08000034"
+    #     resolution = "MSOA11"
+    #     variant = "ppp"
+    #     cache = "./cache"
+    #     microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+    #     microsim.run(2011, 2012)
+    #
+    # def test_static_leeds(self):
+    #     region = "E08000035"
+    #     resolution = "MSOA11"
+    #     variant = "ppp"
+    #     cache = "./cache"
+    #     microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+    #     microsim.run(2011, 2012)
+    #
+    # def test_static_wakefield(self):
+    #     region = "E08000036"
+    #     resolution = "MSOA11"
+    #     variant = "ppp"
+    #     cache = "./cache"
+    #     microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+    #     microsim.run(2011, 2012)
 
     # def test_1_static(self):
     #     region = "E09000001"
@@ -82,9 +82,12 @@ class Test(unittest.TestCase):
     #     assign.run()
 
     def test_4_simulation(self):
+        from daedalus.population import Population
+        from daedalus.mortality import Mortality
         # TODO is there a way to set the spec with the population size before running? There is!
+
         sim = InteractiveContext('config/model_specification.yaml', setup=False)
         sim.configuration.update({'population': {'population_size': len(pd.read_csv('data/Testfile.csv'))}})
         sim.setup()
         sim.run()
-        print(sim.get_population())
+        print (sim.get_population().alive.value_counts())

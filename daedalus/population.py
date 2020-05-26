@@ -20,7 +20,7 @@ class Population:
 
     def setup(self, builder: Builder):
 
-        self.columns = ['PID', 'Area', 'DC1117EW_C_SEX', 'DC1117EW_C_AGE', 'DC2101EW_C_ETHPUK11', 'entrance_time']
+        self.columns = ['PID', 'Area', 'DC1117EW_C_SEX', 'DC1117EW_C_AGE', 'DC2101EW_C_ETHPUK11', 'entrance_time','alive']
 
         self.population_view = builder.population.get_view(self.columns)
 
