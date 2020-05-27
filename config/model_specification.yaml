@@ -25,6 +25,6 @@ configuration:
         age_start: 0
         age_end: 100
     mortality:
-        mortality_rate: 0.5
+        mortality_rate: 0.1
     migration:
-        migration_rate: 0.2
+        migration_rate: 0.3
