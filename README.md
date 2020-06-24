@@ -3,13 +3,26 @@
 
 # Daedalus
 
-Daedalus is a novel dynamic spatial microsimulation prototype being developed at the Leeds Institute for Institute Data Analytics. Currently, the main goal is to a create a proof of concept component as part of the SPENSER (Synthetic Population Estimation and Scenario Projection Model) project.  In this we hope to demonstrate a potential for a highly integrated system that allows users to produce (custom) population projections for policy intervention analysis.
+Daedalus is a novel dynamic spatial microsimulation prototype being developed in collaboration between Leeds Institute for Institute Data Analytics and Alan Turing Institute. The main goal is to a create a proof of concept component as part of the SPENSER (Synthetic Population Estimation and Scenario Projection Model) project.  In this we hope to demonstrate a potential for a highly integrated system that allows users to produce (custom) population projections for policy intervention analysis.
+
+This component will provide simulation utilities for the whole of the United Kingdom at the local authority(LA) level. Initial developments and testing will take place with the 5 LAs of West Yorkshire.
+
+| Area       | Code      |
+|------------|-----------|
+| Bradford   | E08000032 |
+| Calderdale | E08000033 |
+| Kirklees   | E08000034 |
+| Leeds      | E08000035 |
+| Wakefield  | E08000036 |
+
+# Latest Development News
+> 0.0.2-pre-alpha -> development is currently focusing on adapting [vivarium public health (SPENSER)](https://github.com/alan-turing-institute/vivarium_public_health_spenser) for this project.
 
 # How to install and run. 
 As it stands, the easiest way to install Daedalus is to clone this repo and `pip install .` 
 The Daedalus setup.py should install the correct versions but I tell you this just in case; If you have any issue installing the dependencies then please let me know. I have found installing the dependancies is a lot more manageable by using **pip install on the each of the development branches** for the components in SPENSER. Doing this avoids confusion between the versions on PyPi and Conda which are not the latest versions used by this project, I hope to resolve this as some point but for now this offers the most flexbilty.
 
-Example; if you need to install the UKpopulation component then either clone its repo and within the cloned directory, do a 
+Example; if you need to install the UKPopulation component then either clone its repo and within the cloned directory, do a 
 
 `pip install .` 
 
