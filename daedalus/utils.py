@@ -3,27 +3,38 @@ utility functions
 """
 
 import argparse
-import json
+import yaml
 import numpy as np
 import pandas as pd
 import humanleague as hl
 
+from vivarium.config_tree import ConfigTree
+
 
 def get_config():
-    parser = argparse.ArgumentParser(description="static sequential (population/household) microsimulation")
+    # TODO need to reintroduce the andrews original microsimulation and configuration to initialise the new dynamic
+    #  microsimulation. Could rely on the vivarium config file somehow?
+    parser = argparse.ArgumentParser(description="Dynamic Microsimulation")
 
     parser.add_argument("-c", "--config", required=True, type=str, metavar="config-file",
-                        help="the model configuration file (json). See config/*_example.json")
-    parser.add_argument("regions", type=str, nargs="+", metavar="LAD",
-                        help="ONS code for LAD (multiple LADs can be set).")
+                        help="the model configuration file (YAML)")
 
+    # TODO parse/add arguments for synthetic population generation for LADs.
     args = parser.parse_args()
-
+    # Open the vivarium configuration yaml.
     with open(args.config) as config_file:
-        params = json.load(config_file)
-    # add the regions
-    params["regions"] = args.regions
-    return params
+        config = ConfigTree(yaml.full_load(config_file))
+    return config
+
+def base_plugins():
+    config = {'required': {
+                  'data': {
+                      'controller': 'vivarium_public_health.testing.mock_artifact.MockArtifactManager',
+                      'builder_interface': 'vivarium.framework.artifact.ArtifactInterface'
+                  }
+             }
+    }
+    return ConfigTree(config)
 
 
 def relEqual(x, y, tol=2 ** -26):
