@@ -1,6 +1,5 @@
 paths:
     # file should have columns -> PID,location,sex,age,ethnicity
-    # if prepare_data (see below), this is normally the same as prepare_data["path_to_output"]
     path_to_pop_file: './data/1000rows_ssm_E08000032_MSOA11_ppp_2011.csv'
     path_to_mortality_file: './persistent_data/Mortality2011_LEEDS1_2.csv'
     path_to_fertility_file: './persistent_data/Fertility2011_LEEDS1_2.csv'
@@ -18,7 +17,6 @@ configuration:
         end:   {year: 2012, month: 1, day: 1}
         step_size: 10  # Days
     population:
-        population_size: 0 # 1 Base
         age_start: 0
         age_end: 100
 
