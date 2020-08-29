@@ -26,7 +26,7 @@ def get_config():
         config = ConfigTree(yaml.full_load(config_file))
     return config
 
-# TODO Investigate the mock artifact manager.
+# TODO Investigate the mock artifact manager. Not sure if this is what we should be using.
 def base_plugins():
     config = {'required': {
                   'data': {
