@@ -6,7 +6,7 @@ import argparse
 import yaml
 import numpy as np
 import pandas as pd
-import humanleague as hl
+#import humanleague as hl
 
 from vivarium.config_tree import ConfigTree
 
@@ -197,26 +197,26 @@ def check_result(msynth):
         raise ValueError("convergence failure")
 
 
-def microsynthesise_seed(dc1117, dc2101, dc6206):
-    """
-  Microsynthesise a seed population from census data
-  """
-    n_geog = len(dc1117.GEOGRAPHY_CODE.unique())
-    n_sex = 2  # len(dc1117.C_SEX.unique())
-    n_age = len(dc1117.C_AGE.unique())
-    cen11sa = unlistify(dc1117, ["GEOGRAPHY_CODE", "C_SEX", "C_AGE"], [n_geog, n_sex, n_age], "OBS_VALUE")
-    n_eth = len(dc2101.C_ETHPUK11.unique())
-    cen11se = unlistify(dc2101, ["GEOGRAPHY_CODE", "C_SEX", "C_ETHPUK11"], [n_geog, n_sex, n_eth], "OBS_VALUE")
-
-    # TODO use microdata (national or perhaps regional) Mistral/persistent_data/seed_ASE_EW.csv
-    # - requires unified age structure
-
-    # microsynthesise these two into a 4D seed (if this has a lot of zeros can have big impact on microsim)
-    print("Synthesising 2011 seed population...", end='')
-    msynth = hl.qis([np.array([0, 1, 2]), np.array([0, 1, 3])], [cen11sa, cen11se])
-    check_result(msynth)
-    print("OK")
-    return msynth["result"]
+# def microsynthesise_seed(dc1117, dc2101, dc6206):
+#     """
+#   Microsynthesise a seed population from census data
+#   """
+#     n_geog = len(dc1117.GEOGRAPHY_CODE.unique())
+#     n_sex = 2  # len(dc1117.C_SEX.unique())
+#     n_age = len(dc1117.C_AGE.unique())
+#     cen11sa = unlistify(dc1117, ["GEOGRAPHY_CODE", "C_SEX", "C_AGE"], [n_geog, n_sex, n_age], "OBS_VALUE")
+#     n_eth = len(dc2101.C_ETHPUK11.unique())
+#     cen11se = unlistify(dc2101, ["GEOGRAPHY_CODE", "C_SEX", "C_ETHPUK11"], [n_geog, n_sex, n_eth], "OBS_VALUE")
+#
+#     # TODO use microdata (national or perhaps regional) Mistral/persistent_data/seed_ASE_EW.csv
+#     # - requires unified age structure
+#
+#     # microsynthesise these two into a 4D seed (if this has a lot of zeros can have big impact on microsim)
+#     print("Synthesising 2011 seed population...", end='')
+#     msynth = hl.qis([np.array([0, 1, 2]), np.array([0, 1, 3])], [cen11sa, cen11se])
+#     check_result(msynth)
+#     print("OK")
+#     return msynth["result"]
 
 
 def year_sequence(start_year, end_year):
