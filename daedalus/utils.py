@@ -3,27 +3,39 @@ utility functions
 """
 
 import argparse
-import json
+import yaml
 import numpy as np
 import pandas as pd
-import humanleague as hl
+#import humanleague as hl
+
+from vivarium.config_tree import ConfigTree
 
 
 def get_config():
-    parser = argparse.ArgumentParser(description="static sequential (population/household) microsimulation")
+    # TODO need to reintroduce the andrews original microsimulation and configuration to initialise the new dynamic
+    #  microsimulation. Could rely on the vivarium config file somehow?
+    parser = argparse.ArgumentParser(description="Dynamic Microsimulation")
 
     parser.add_argument("-c", "--config", required=True, type=str, metavar="config-file",
-                        help="the model configuration file (json). See config/*_example.json")
-    parser.add_argument("regions", type=str, nargs="+", metavar="LAD",
-                        help="ONS code for LAD (multiple LADs can be set).")
+                        help="the model configuration file (YAML)")
 
+    # TODO parse/add arguments for synthetic population generation for LADs.
     args = parser.parse_args()
-
+    # Open the vivarium configuration yaml.
     with open(args.config) as config_file:
-        params = json.load(config_file)
-    # add the regions
-    params["regions"] = args.regions
-    return params
+        config = ConfigTree(yaml.full_load(config_file))
+    return config
+
+# TODO Investigate the mock artifact manager. Not sure if this is what we should be using.
+def base_plugins():
+    config = {'required': {
+                  'data': {
+                      'controller': 'vivarium_public_health.testing.mock_artifact.MockArtifactManager',
+                      'builder_interface': 'vivarium.framework.artifact.ArtifactInterface'
+                  }
+             }
+    }
+    return ConfigTree(config)
 
 
 def relEqual(x, y, tol=2 ** -26):
@@ -185,26 +197,26 @@ def check_result(msynth):
         raise ValueError("convergence failure")
 
 
-def microsynthesise_seed(dc1117, dc2101, dc6206):
-    """
-  Microsynthesise a seed population from census data
-  """
-    n_geog = len(dc1117.GEOGRAPHY_CODE.unique())
-    n_sex = 2  # len(dc1117.C_SEX.unique())
-    n_age = len(dc1117.C_AGE.unique())
-    cen11sa = unlistify(dc1117, ["GEOGRAPHY_CODE", "C_SEX", "C_AGE"], [n_geog, n_sex, n_age], "OBS_VALUE")
-    n_eth = len(dc2101.C_ETHPUK11.unique())
-    cen11se = unlistify(dc2101, ["GEOGRAPHY_CODE", "C_SEX", "C_ETHPUK11"], [n_geog, n_sex, n_eth], "OBS_VALUE")
-
-    # TODO use microdata (national or perhaps regional) Mistral/persistent_data/seed_ASE_EW.csv
-    # - requires unified age structure
-
-    # microsynthesise these two into a 4D seed (if this has a lot of zeros can have big impact on microsim)
-    print("Synthesising 2011 seed population...", end='')
-    msynth = hl.qis([np.array([0, 1, 2]), np.array([0, 1, 3])], [cen11sa, cen11se])
-    check_result(msynth)
-    print("OK")
-    return msynth["result"]
+# def microsynthesise_seed(dc1117, dc2101, dc6206):
+#     """
+#   Microsynthesise a seed population from census data
+#   """
+#     n_geog = len(dc1117.GEOGRAPHY_CODE.unique())
+#     n_sex = 2  # len(dc1117.C_SEX.unique())
+#     n_age = len(dc1117.C_AGE.unique())
+#     cen11sa = unlistify(dc1117, ["GEOGRAPHY_CODE", "C_SEX", "C_AGE"], [n_geog, n_sex, n_age], "OBS_VALUE")
+#     n_eth = len(dc2101.C_ETHPUK11.unique())
+#     cen11se = unlistify(dc2101, ["GEOGRAPHY_CODE", "C_SEX", "C_ETHPUK11"], [n_geog, n_sex, n_eth], "OBS_VALUE")
+#
+#     # TODO use microdata (national or perhaps regional) Mistral/persistent_data/seed_ASE_EW.csv
+#     # - requires unified age structure
+#
+#     # microsynthesise these two into a 4D seed (if this has a lot of zeros can have big impact on microsim)
+#     print("Synthesising 2011 seed population...", end='')
+#     msynth = hl.qis([np.array([0, 1, 2]), np.array([0, 1, 3])], [cen11sa, cen11se])
+#     check_result(msynth)
+#     print("OK")
+#     return msynth["result"]
 
 
 def year_sequence(start_year, end_year):

@@ -1,90 +1,167 @@
-import unittest
-
+import pytest
+import yaml
+import pandas as pd
+from os.path import exists
+from os import remove
 from vivarium import InteractiveContext
 
-import daedalus.static as Static
-import daedalus.static_h as StaticH
-import daedalus.assignment as Assignment
-import pandas as pd
+from daedalus.RateTables import ImmigrationRateTable
+from daedalus.utils import get_config
+from daedalus.PopulationSynthesis import static
+
+from daedalus.RateTables import FertilityRateTable
+from daedalus.RateTables import MortalityRateTable
+from daedalus.RateTables import EmigrationRateTable
+
+from pathlib import Path
+
+from vivarium.framework.configuration import build_simulation_configuration
+from vivarium.config_tree import ConfigTree
 
 
-class Test(unittest.TestCase):
+@pytest.fixture()
+def configuration():
+    with open('tests/test_configs/test_config.yaml') as config_file:
+        configuration = ConfigTree(yaml.full_load(config_file))
 
-    def test_static_Bradford(self):
-        region = "E08000032"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
+    configuration.update({
+        'population': {
+            'age_start': 0,
+            'age_end': 100,
+            'population_size': len(pd.read_csv(configuration.paths.path_to_pop_file))
+        },
+        'time': {
+            'start': {'year': 2011},
+            'end': {'year': 2012},
+            'step_size': 20
+        },
+        'randomness': {'key_columns': ['entrance_time', 'age']}
+    }, source=str(Path(__file__).resolve()))
+    return configuration
 
-    def test_static_Calderdale(self):
-        region = "E08000033"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
 
-    def test_static_Kirklees(self):
-        region = "E08000034"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
+@pytest.fixture()
+def base_plugins():
+    config = {'required': {
+        'data': {
+            'controller': 'vivarium_public_health.testing.mock_artifact.MockArtifactManager',
+            'builder_interface': 'vivarium.framework.artifact.ArtifactInterface'
+        }
+    }
+    }
 
-    def test_static_leeds(self):
-        region = "E08000035"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
+    return ConfigTree(config)
 
-    def test_static_wakefield(self):
-        region = "E08000036"
-        resolution = "MSOA11"
-        variant = "ppp"
-        cache = "./cache"
-        microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
-        microsim.run(2011, 2012)
 
-    # def test_1_static(self):
-    #     region = "E09000001"
-    #     resolution = "MSOA11"
-    #     variant = "ppp"
-    #     cache_dir = "./tests/cache"
-    #     microsim = Static.SequentialMicrosynthesis(region, resolution, variant, False, cache_dir, "./tests/data", True)
-    #     microsim.run(2011, 2011)
-    #
-    # def test_2_static_household(self):
-    #     region = "E09000001"
-    #     resolution = "OA11"
-    #     cache_dir = "./tests/cache"
-    #     # Normally requires output from upstream model household_micro
-    #     upstream_dir = "./tests/data"
-    #     input_dir = "./persistent_data/"
-    #     downstream_dir = "./tests/data/"
-    #     microsim = StaticH.SequentialMicrosynthesisH(region, resolution, cache_dir, upstream_dir, input_dir,
-    #                                                  downstream_dir)
-    #     microsim.run(2011, 2011)
-    #
-    # def test_3_assignment(self):
-    #     region = "E09000001"
-    #     h_res = "OA11"
-    #     p_res = "MSOA11"
-    #     variant = "ppp"
-    #     year = 2011
-    #     strict_mode = False
-    #     data_dir = "./tests/data"
-    #     assign = Assignment.Assignment(region, h_res, p_res, year, variant, strict_mode, data_dir)
-    #     assign.run()
+# TODO These tests are for the Synthesing the populations as MSOA11 level. They need the DUMMY key to work.
 
-    def test_4_simulation(self):
-        # TODO is there a way to set the spec with the population size before running? There is!
-        sim = InteractiveContext('config/model_specification.yaml', setup=False)
-        sim.configuration.update({'population': {'population_size': len(pd.read_csv('data/Testfile.csv'))}})
-        sim.setup()
-        sim.run()
-        print(sim.get_population())
+# def test_1_static_Bradford():
+#     region = "E08000032"
+#     resolution = "MSOA11"
+#     variant = "ppp"
+#     cache = "./cache"
+#     microsim = static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+#     microsim.run(2011, 2012)
+#
+#
+# def test_2_static_Calderdale():
+#     region = "E08000033"
+#     resolution = "MSOA11"
+#     variant = "ppp"
+#     cache = "./cache"
+#     microsim = static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+#     microsim.run(2011, 2012)
+#
+#
+# def test_3_static_Kirklees():
+#     region = "E08000034"
+#     resolution = "MSOA11"
+#     variant = "ppp"
+#     cache = "./cache"
+#     microsim = static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+#     microsim.run(2011, 2012)
+#
+#
+# def test_4_static_leeds():
+#     region = "E08000035"
+#     resolution = "MSOA11"
+#     variant = "ppp"
+#     cache = "./cache"
+#     microsim = static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+#     microsim.run(2011, 2012)
+#
+#
+# def test_5_static_wakefield():
+#     region = "E08000036"
+#     resolution = "MSOA11"
+#     variant = "ppp"
+#     cache = "./cache"
+#     microsim = static.SequentialMicrosynthesis(region, resolution, variant, False, cache, "./data", False)
+#     microsim.run(2011, 2012)
+
+
+def test_6_fertility_rate_table(configuration):
+    RateTable = FertilityRateTable.FertilityRateTable(configuration=configuration)
+    # Override to test cache.
+    RateTable.rate_table_path = 'tests/cache/' + RateTable.filename
+    RateTable.set_rate_table()
+    # Process data and cache first time
+    RateTable.cache()
+    assert exists(RateTable.rate_table_path)
+    RateTable.rate_table = None
+    RateTable.set_rate_table()
+    print(RateTable.rate_table)
+    assert isinstance(RateTable.rate_table, pd.DataFrame)
+    RateTable.clear_cache()
+
+
+def test_7_mortality_rate_table(configuration):
+    RateTable = MortalityRateTable.MortalityRateTable(configuration=configuration)
+    # Override to test cache.
+    RateTable.rate_table_path = 'tests/cache/' + RateTable.filename
+    RateTable.set_rate_table()
+    # Process data and cache first time
+    RateTable.cache()
+    assert exists(RateTable.rate_table_path)
+    RateTable.rate_table = None
+    RateTable.set_rate_table()
+    print(RateTable.rate_table)
+    assert isinstance(RateTable.rate_table, pd.DataFrame)
+    RateTable.clear_cache()
+
+
+def test_8_emigration_rate_table(configuration):
+    RateTable = EmigrationRateTable.EmigrationRateTable(configuration=configuration)
+    # Override to test cache.
+    RateTable.rate_table_path = 'tests/cache/' + RateTable.filename
+    RateTable.set_rate_table()
+    # Process data and cache first time
+    RateTable.cache()
+    assert exists(RateTable.rate_table_path)
+    RateTable.rate_table = None
+    RateTable.set_rate_table()
+    print(RateTable.rate_table)
+    assert isinstance(RateTable.rate_table, pd.DataFrame)
+    RateTable.clear_cache()
+
+
+def test_9_immigration_rate_table(configuration):
+    RateTable = ImmigrationRateTable.ImmigrationRateTable(configuration=configuration)
+    # Override to test cache.
+    RateTable.rate_table_path = 'tests/cache/' + RateTable.filename
+    RateTable.set_rate_table()
+    # Process data and cache first time
+    RateTable.cache()
+    assert exists(RateTable.rate_table_path)
+    RateTable.rate_table = None
+    RateTable.set_rate_table()
+    print(RateTable.rate_table)
+    assert isinstance(RateTable.rate_table, pd.DataFrame)
+    RateTable.clear_cache()
+
+# def test_9_simulation(self):
+#     sim = InteractiveContext('config/model_specification.yaml', setup=False)
+#     sim.configuration.update({'population': {'population_size': len(pd.read_csv('data/Testfile.csv'))}})
+#     sim.setup()
+#     sim.run()
+#     print(sim.get_population())

@@ -1,0 +1,21 @@
+paths:
+    path_to_pop_file: './data/ssm_E08000032_MSOA11_ppp_2011.csv'
+    path_to_mortality_file: './persistent_data/Mortality2011_LEEDS1_2.csv'
+    path_to_fertility_file: './persistent_data/Fertility2011_LEEDS1_2.csv'
+    path_to_emigration_file: './persistent_data/Emig_2011_2012_LEEDS2.csv'
+    path_to_immigration_file: './persistent_data/Immig_2011_2012_LEEDS2.csv'
+    path_to_total_population_file: './persistent_data/MY2011AGEN.csv'
+
+configuration:
+    randomness:
+        key_columns: ['entrance_time', 'age']
+    input_data:
+        location: 'UK'
+    time:
+        start: {year: 2011, month: 1, day: 1}
+        end:   {year: 2012, month: 1, day: 1}
+        step_size: 10  # Days
+    population:
+        age_start: 0
+        age_end: 100
+
