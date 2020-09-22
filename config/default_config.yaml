@@ -9,6 +9,7 @@ paths:
     path_msoa_to_lad: './persistent_data/Middle_Layer_Super_Output_Area__2011__to_Ward__2016__Lookup_in_England_and_Wales.csv'
     path_to_OD_matrices: './persistent_data/od_matrices'
     path_to_OD_matrix_index_file: './persistent_data/od_matrices/MSOA_to_OD_index.csv'
+    path_to_internal_outmigration_file: './persistent_data/InternalOutmig2011_LEEDS2.csv'
 
 
 configuration:

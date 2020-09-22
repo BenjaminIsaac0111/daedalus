@@ -2,7 +2,7 @@
 from pathlib import Path
 import time
 import pandas as pd
-
+import datetime
 import daedalus.utils as utils
 
 from vivarium import InteractiveContext
@@ -20,6 +20,7 @@ from daedalus.RateTables.MortalityRateTable import MortalityRateTable
 from daedalus.RateTables.FertilityRateTable import FertilityRateTable
 from daedalus.RateTables.ImmigrationRateTable import ImmigrationRateTable
 from daedalus.RateTables.InternalMigrationMatrix import InternalMigrationMatrix
+from daedalus.RateTables.InternalMigrationRateTable import InternalMigrationRateTable
 
 def main(configuration):
     """ Run the daedalus Microsimulation """
@@ -66,7 +67,10 @@ def main(configuration):
     simulation._data.write("internal_migration.MSOA_LAD_indices", OD_matrices.df_OD_matrix_with_LAD)
     simulation._data.write("internal_migration.path_to_OD_matrices", configuration.paths.path_to_OD_matrices)
 
-
+    # setup internal migraionts rates
+    asfr_int_migration = InternalMigrationRateTable(configuration=configuration)
+    asfr_int_migration.set_rate_table()
+    simulation._data.write("cause.age_specific_internal_outmigration_rate", asfr_int_migration.rate_table)
 
     # setup mortality rates
     asfr_mortality = MortalityRateTable(configuration=configuration)
@@ -95,10 +99,16 @@ def main(configuration):
     simulation._data.write("cause.all_causes.cause_specific_total_immigrants_per_year",
                            asfr_immigration.total_immigrants)
 
+    print ('Start simulation setup')
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     simulation.setup()
+
+    print ('Start running simulation')
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     simulation.run_for(duration=pd.Timedelta(days=num_days))
 
-
+    print('Finished running simulation')
+    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
     pop = simulation.get_population()
     print(pop.head())
 
