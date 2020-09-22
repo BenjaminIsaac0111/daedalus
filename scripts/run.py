@@ -13,11 +13,13 @@ from vivarium_public_health.population import Emigration
 from vivarium_public_health.population import ImmigrationDeterministic as Immigration
 from vivarium_public_health.population.spenser_population import transform_rate_table
 from vivarium_public_health.population.spenser_population import compute_migration_rates
+from vivarium_public_health.population import InternalMigration
 
 from daedalus.RateTables.EmigrationRateTable import EmigrationRateTable
 from daedalus.RateTables.MortalityRateTable import MortalityRateTable
 from daedalus.RateTables.FertilityRateTable import FertilityRateTable
 from daedalus.RateTables.ImmigrationRateTable import ImmigrationRateTable
+from daedalus.RateTables.InternalMigrationMatrix import InternalMigrationMatrix
 
 def main(configuration):
     """ Run the daedalus Microsimulation """
@@ -27,6 +29,8 @@ def main(configuration):
     # TODO: test population initialisation with all West Yorkshire regions.
     #  - The code for this is in daedalus/PopulationSynthesis/*.
     #  - Make sure if region population files already exist in the cache then no need to run initialisation.
+    utils.prepare_dataset(configuration.paths.path_to_raw_pop_file,configuration.paths.path_to_pop_file)
+
     start_population_size = len(pd.read_csv(configuration.paths.path_to_pop_file))
     print('Start Population Size: {}'.format(start_population_size))
 
@@ -38,11 +42,13 @@ def main(configuration):
         }
     }, source=str(Path(__file__).resolve()))
 
+
     components = [TestPopulation(),
                   FertilityAgeSpecificRates(),
                   Mortality(),
                   Emigration(),
-                  Immigration()]
+                  Immigration(),
+                  InternalMigration()]
 
     simulation = InteractiveContext(components=components,
                                     configuration=configuration,
@@ -50,6 +56,17 @@ def main(configuration):
                                     setup=False)
 
     num_days = 365 * 2
+
+    # setup internal migration matrices
+
+    OD_matrices = InternalMigrationMatrix(configuration=configuration)
+    OD_matrices.set_matrix_tables()
+    simulation._data.write("internal_migration.MSOA_index", OD_matrices.MSOA_location_index)
+    simulation._data.write("internal_migration.LAD_index", OD_matrices.LAD_location_index)
+    simulation._data.write("internal_migration.MSOA_LAD_indices", OD_matrices.df_OD_matrix_with_LAD)
+    simulation._data.write("internal_migration.path_to_OD_matrices", configuration.paths.path_to_OD_matrices)
+
+
 
     # setup mortality rates
     asfr_mortality = MortalityRateTable(configuration=configuration)
@@ -80,7 +97,16 @@ def main(configuration):
 
     simulation.setup()
     simulation.run_for(duration=pd.Timedelta(days=num_days))
-    print(simulation.get_population())
+
+
+    pop = simulation.get_population()
+    print(pop.head())
+
+    print ('alive',len(pop[pop['alive']=='alive']))
+    print ('dead',len(pop[pop['alive']=='dead']))
+    print ('emigrated',len(pop[pop['alive']=='emigrated']))
+
+    pop.to_csv('./output/test_output.csv')
 
 
 if __name__ == "__main__":
