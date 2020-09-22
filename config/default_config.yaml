@@ -1,10 +1,15 @@
 paths:
-    path_to_pop_file: './data/ssm_E08000032_MSOA11_ppp_2011.csv'
+    path_to_raw_pop_file: './data/ssm_E08000032_MSOA11_ppp_2011.csv'
+    path_to_pop_file: './data/ssm_E08000032_MSOA11_ppp_2011_processed.csv'
     path_to_mortality_file: './persistent_data/Mortality2011_LEEDS1_2.csv'
     path_to_fertility_file: './persistent_data/Fertility2011_LEEDS1_2.csv'
     path_to_emigration_file: './persistent_data/Emig_2011_2012_LEEDS2.csv'
     path_to_immigration_file: './persistent_data/Immig_2011_2012_LEEDS2.csv'
     path_to_total_population_file: './persistent_data/MY2011AGEN.csv'
+    path_msoa_to_lad: './persistent_data/Middle_Layer_Super_Output_Area__2011__to_Ward__2016__Lookup_in_England_and_Wales.csv'
+    path_to_OD_matrices: './persistent_data/od_matrices'
+    path_to_OD_matrix_index_file: './persistent_data/od_matrices/MSOA_to_OD_index.csv'
+
 
 configuration:
     randomness:
