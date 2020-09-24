@@ -253,7 +253,7 @@ def prepare_dataset(dataset_path="../daedalus/persistent_data/ssm_E08000032_MSOA
         lookup_ethnicity (str, optional): how to map ethnicity from digits to strings.
     """
     # read the dataset
-    dataset = pd.read_csv(dataset_path)[:1000]
+    dataset = pd.read_csv(dataset_path)
     if columns_map:
         # rename columns
         dataset = dataset.rename(columns=columns_map)
