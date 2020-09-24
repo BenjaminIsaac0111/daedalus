@@ -24,4 +24,5 @@ configuration:
     population:
         age_start: 0
         age_end: 100
-
+    # hacky option
+    path_to_pop_file: './data/ssm_E08000032_MSOA11_ppp_2011_processed.csv'
