@@ -30,7 +30,7 @@ def main(configuration):
     # TODO: test population initialisation with all West Yorkshire regions.
     #  - The code for this is in daedalus/PopulationSynthesis/*.
     #  - Make sure if region population files already exist in the cache then no need to run initialisation.
-    utils.prepare_dataset(configuration.paths.path_to_raw_pop_file,configuration.paths.path_to_pop_file)
+    utils.prepare_dataset(configuration.paths.path_to_raw_pop_file, configuration.paths.path_to_pop_file)
 
     start_population_size = len(pd.read_csv(configuration.paths.path_to_pop_file))
     print('Start Population Size: {}'.format(start_population_size))
