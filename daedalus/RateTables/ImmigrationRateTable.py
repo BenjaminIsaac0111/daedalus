@@ -23,5 +23,9 @@ class ImmigrationRateTable(BaseHandler):
                                                        2012,
                                                        self.configuration.population.age_start,
                                                        self.configuration.population.age_end)
+
+    def set_total_immigrants(self):
+        df_immigration = pd.read_csv(self.source_file)
+        print('Computing total immigration rate table...')
         self.total_immigrants = int(df_immigration[df_immigration.columns[4:]].sum().sum())
 
