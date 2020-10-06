@@ -44,19 +44,20 @@ def main(configuration):
     }, source=str(Path(__file__).resolve()))
 
 
-    components = [TestPopulation(),
-                  FertilityAgeSpecificRates(),
-                  Mortality(),
-                  Emigration(),
-                  Immigration(),
-                  InternalMigration()]
+    components = [TestPopulation(),Immigration(),
+                  FertilityAgeSpecificRates(),Mortality(),Emigration()]
+                #,,InternalMigration()
+                #  Mortality(),
+                #  Emigration(),
+                #  Immigration(),
+                #  InternalMigration()]
 
     simulation = InteractiveContext(components=components,
                                     configuration=configuration,
                                     plugin_configuration=utils.base_plugins(),
                                     setup=False)
 
-    num_days = 365 * 2
+    num_days = 365*2
 
     # setup internal migration matrices
 
@@ -66,6 +67,8 @@ def main(configuration):
     simulation._data.write("internal_migration.LAD_index", OD_matrices.LAD_location_index)
     simulation._data.write("internal_migration.MSOA_LAD_indices", OD_matrices.df_OD_matrix_with_LAD)
     simulation._data.write("internal_migration.path_to_OD_matrices", configuration.paths.path_to_OD_matrices)
+
+    simulation._data.write("cause.all_causes.immigration_to_MSOA", pd.read_csv(configuration.path_to_immigration_MSOA))
 
     # setup internal migraionts rates
     asfr_int_migration = InternalMigrationRateTable(configuration=configuration)
@@ -94,6 +97,7 @@ def main(configuration):
     # setup immigration rates
     asfr_immigration = ImmigrationRateTable(configuration=configuration)
     asfr_immigration.set_rate_table()
+    asfr_immigration.set_total_immigrants()
     simulation._data.write("cause.all_causes.cause_specific_immigration_rate",
                            asfr_immigration.rate_table)
     simulation._data.write("cause.all_causes.cause_specific_total_immigrants_per_year",
@@ -112,11 +116,15 @@ def main(configuration):
     pop = simulation.get_population()
     print(pop.head())
 
+    pop.to_csv('./output/test_output.csv')
+
     print ('alive',len(pop[pop['alive']=='alive']))
     print ('dead',len(pop[pop['alive']=='dead']))
     print ('emigrated',len(pop[pop['alive']=='emigrated']))
+    print ('internal migration',len(pop[pop['previous_MSOA_locations']!='']))
+    print ('New children',len(pop[pop['parent_id']!=-1]))
+    print ('Immigrants',len(pop[pop['MSOA'].astype(str)=='nan']))
 
-    pop.to_csv('./output/test_output.csv')
 
 
 if __name__ == "__main__":
