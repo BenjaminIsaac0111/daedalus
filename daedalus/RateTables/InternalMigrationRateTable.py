@@ -17,5 +17,5 @@ class InternalMigrationRateTable(BaseHandler):
         print('Computing internal migration rate table...')
 
         self.rate_table = self.transform_rate_table(df_internal_outmigration, 2011, 2012,
-                                                    self.configuration.population.age_start,
-                                                    self.configuration.population.age_end)
+                                                    self.configuration.configuration.population.age_start,
+                                                    self.configuration.configuration.population.age_end)

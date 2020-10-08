@@ -27,8 +27,8 @@ class ImmigrationRateTable(BaseHandler):
         self.rate_table = self.compute_migration_rates(df_immigration, df_total_population,
                                                        2011,
                                                        2012,
-                                                       self.configuration.population.age_start,
-                                                       self.configuration.population.age_end)
+                                                       self.configuration.configuration.population.age_start,
+                                                       self.configuration.configuration.population.age_end)
 
     def set_total_immigrants(self):
         df_immigration = pd.read_csv(self.source_file)

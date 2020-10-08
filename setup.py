@@ -20,7 +20,7 @@ setup(name='daedalus',
       zip_safe=False,
 
       # NOTE: vivarium is not available via conda so needs to be installed via pip
-      install_requires=['distutils_pytest', 'vivarium',
+      install_requires=['distutils_pytest', 'vivarium>=0.9.1',
                         'ukcensusapi @ git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi',
                         'ukpopulation @ git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation',
                         'humanleague @ git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague',

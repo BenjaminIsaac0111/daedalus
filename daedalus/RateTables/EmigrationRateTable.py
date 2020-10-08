@@ -20,5 +20,5 @@ class EmigrationRateTable(BaseHandler):
         self.rate_table = self.compute_migration_rates(df_emigration, df_total_population,
                                                        2011,
                                                        2012,
-                                                       self.configuration.population.age_start,
-                                                       self.configuration.population.age_end)
+                                                       self.configuration.configuration.population.age_start,
+                                                       self.configuration.configuration.population.age_end)
