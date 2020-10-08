@@ -8,8 +8,8 @@ from os import remove
 class ImmigrationRateTable(BaseHandler):
     def __init__(self, configuration):
         super().__init__(configuration=configuration)
-        self.source_file = self.configuration.paths.path_to_immigration_file
-        self.total_population_file = self.configuration.paths.path_to_total_population_file
+        self.source_file = self.configuration.path_to_immigration_file
+        self.total_population_file = self.configuration.path_to_total_population_file
         self.total_immigrants = None
         self.location = self.configuration.configuration.location
         self.filename = 'immigration_rate_table_'+self.location+'.csv'

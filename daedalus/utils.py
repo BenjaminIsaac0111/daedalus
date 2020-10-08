@@ -11,18 +11,10 @@ import pandas as pd
 from vivarium.config_tree import ConfigTree
 
 
-def get_config():
-    # TODO need to reintroduce the andrews original microsimulation and configuration to initialise the new dynamic
-    #  microsimulation. Could rely on the vivarium config file somehow?
-    parser = argparse.ArgumentParser(description="Dynamic Microsimulation")
+def get_config(config):
 
-    parser.add_argument("-c", "--config", required=True, type=str, metavar="config-file",
-                        help="the model configuration file (YAML)")
-
-    # TODO parse/add arguments for synthetic population generation for LADs.
-    args = parser.parse_args()
-    # Open the vivarium configuration yaml.
-    with open(args.config) as config_file:
+    # Open the vivarium config yaml.
+    with open(config) as config_file:
         config = ConfigTree(yaml.full_load(config_file))
     return config
 

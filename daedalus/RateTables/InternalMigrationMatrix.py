@@ -7,8 +7,8 @@ from daedalus.RateTables.BaseHandler import BaseHandler
 class InternalMigrationMatrix(BaseHandler):
     def __init__(self, configuration):
         super().__init__(configuration=configuration)
-        self.path_msoa_to_lad = self.configuration.paths.path_msoa_to_lad
-        self.path_to_OD_matrix_index_file = self.configuration.paths.path_to_OD_matrix_index_file
+        self.path_msoa_to_lad = self.configuration.path_msoa_to_lad
+        self.path_to_OD_matrix_index_file = self.configuration.path_to_OD_matrix_index_file
         self.df_OD_matrix_with_LAD = None
         self.MSOA_location_index = {}
         self.df_OD_matrix_with_LAD = {}

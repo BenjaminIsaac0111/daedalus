@@ -10,7 +10,7 @@ class FertilityRateTable(BaseHandler):
         super().__init__(configuration=configuration)
         self.filename = 'fertility_rate_table.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
-        self.source_file = self.configuration.paths.path_to_fertility_file
+        self.source_file = self.configuration.path_to_fertility_file
 
     def _build(self):
         df_fertility = pd.read_csv(self.source_file)

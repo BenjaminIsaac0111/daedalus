@@ -10,7 +10,7 @@ class MortalityRateTable(BaseHandler):
         super().__init__(configuration=configuration)
         self.filename = 'mortality_rate_table.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
-        self.source_file = self.configuration.paths.path_to_mortality_file
+        self.source_file = self.configuration.path_to_mortality_file
 
     def _build(self):
         df = pd.read_csv(self.source_file)

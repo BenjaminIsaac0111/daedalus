@@ -10,8 +10,8 @@ class EmigrationRateTable(BaseHandler):
         super().__init__(configuration=configuration)
         self.filename = 'emigration_rate_table.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
-        self.source_file = self.configuration.paths.path_to_emigration_file
-        self.total_population_file = self.configuration.paths.path_to_total_population_file
+        self.source_file = self.configuration.path_to_emigration_file
+        self.total_population_file = self.configuration.path_to_total_population_file
 
     def _build(self):
         df_emigration = pd.read_csv(self.source_file)

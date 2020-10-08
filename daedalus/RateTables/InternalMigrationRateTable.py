@@ -10,7 +10,7 @@ class InternalMigrationRateTable(BaseHandler):
         super().__init__(configuration=configuration)
         self.filename = 'integral_migration_rate_table.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
-        self.source_file = self.configuration.paths.path_to_internal_outmigration_file
+        self.source_file = self.configuration.path_to_internal_outmigration_file
 
     def _build(self):
         df_internal_outmigration = pd.read_csv(self.source_file)
