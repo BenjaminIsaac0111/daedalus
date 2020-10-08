@@ -20,6 +20,9 @@ class BaseHandler:
             print('Fetching rate table from catch {}'.format(self.rate_table_path))
             self.rate_table = pd.read_csv(self.rate_table_path, index_col=[0])
 
+    def set_matrix_tables(self):
+        self._build()
+
     def cache(self, overwrite=False):
         if not exists(self.rate_table_path) or overwrite:
             print('Caching rate table...')

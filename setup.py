@@ -26,7 +26,7 @@ setup(name='daedalus',
                         'humanleague @ git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague',
                         'household_microsynth @ git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth',
                         'microsimulation @ git+https://github.com/nismod/microsimulation.git@Development#egg=microsimulation',
-                        'vivarium_public_health @ git+https://github.com/alan-turing-institute/vivarium_public_health_spenser.git@Development#egg=vivarium_public_health_spenser'],
+                        'vivarium_public_health @ git+https://github.com/alan-turing-institute/vivarium_public_health_spenser.git@feature/51-assign-MSO-to-immigrants#egg=vivarium_public_health_spenser'],
 
       test_suite='nose.collector',
       tests_require=['nose'],
