@@ -42,15 +42,15 @@ def RunPipeline(config, start_population_size):
             'population_size': start_population_size,
         }}, source=str(Path(__file__).resolve()))
 
+    num_days = config.time.num_days
+
+
     components = [TestPopulation(),InternalMigration(), Mortality(), Emigration(), FertilityAgeSpecificRates(),Immigration()]
 
     simulation = InteractiveContext(components=components,
                                     configuration=config,
                                     plugin_configuration=utils.base_plugins(),
                                     setup=False)
-
-    num_days = config.time.num_days
-
     # setup internal migration matrices
     OD_matrices = InternalMigrationMatrix(configuration=config)
     OD_matrices.set_matrix_tables()
