@@ -11,7 +11,7 @@ class ImmigrationRateTable(BaseHandler):
         self.source_file = self.configuration.path_to_immigration_file
         self.total_population_file = self.configuration.path_to_total_population_file
         self.total_immigrants = None
-        self.location = self.configuration.configuration.location
+        self.location = self.configuration.location
         self.filename = 'immigration_rate_table_'+self.location+'.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
 
@@ -27,8 +27,8 @@ class ImmigrationRateTable(BaseHandler):
         self.rate_table = self.compute_migration_rates(df_immigration, df_total_population,
                                                        2011,
                                                        2012,
-                                                       self.configuration.configuration.population.age_start,
-                                                       self.configuration.configuration.population.age_end)
+                                                       self.configuration.population.age_start,
+                                                       self.configuration.population.age_end)
 
     def set_total_immigrants(self):
         df_immigration = pd.read_csv(self.source_file)

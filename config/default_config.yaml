@@ -1,16 +1,15 @@
-configuration:
-    randomness:
-        key_columns: ['entrance_time', 'age']
-    input_data:
-        location: 'UK'
-    time:
-        start: {year: 2011, month: 1, day: 1}
-        end:   {year: 2012, month: 1, day: 1}
-        step_size: 10  # Days
-        num_days: 365
-    population:
-        age_start: 0
-        age_end: 100
+randomness:
+    key_columns: ['entrance_time', 'age']
+input_data:
+    location: 'UK'
+time:
+    start: {year: 2011, month: 1, day: 1}
+    end:   {year: 2012, month: 1, day: 1}
+    step_size: 10  # Days
+    num_days: 365
+population:
+    age_start: 0
+    age_end: 100
 
 mortality_file: 'Mortality2011_LEEDS1_2.csv'
 fertility_file: 'Fertility2011_LEEDS1_2.csv'

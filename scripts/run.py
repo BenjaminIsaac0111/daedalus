@@ -33,9 +33,8 @@ def run_pipeline():
     if args.location:
         location = args.location
         configuration.update({
-            'configuration': {
-                'location': args.location,
-            }}, source=str(Path(__file__).resolve()))
+            'location': args.location,
+            }, source=str(Path(__file__).resolve()))
     else:
         try:
             location = configuration.configuration.location
@@ -126,7 +125,7 @@ def run_pipeline():
                           loopup_location_code=configuration.path_msoa_to_lad)
 
     # run the pipeline
-    pop = RunPipeline(configuration)
+    pop = RunPipeline(configuration, start_population_size)
 
     # save the output file to csv
     output_data_filename = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'

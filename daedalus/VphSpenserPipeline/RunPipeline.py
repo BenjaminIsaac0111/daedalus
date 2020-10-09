@@ -2,6 +2,7 @@
 import pandas as pd
 import datetime
 import daedalus.utils as utils
+from pathlib import Path
 
 from vivarium import InteractiveContext
 from vivarium_public_health.population.spenser_population import TestPopulation
@@ -19,14 +20,15 @@ from daedalus.RateTables.InternalMigrationMatrix import InternalMigrationMatrix
 from daedalus.RateTables.InternalMigrationRateTable import InternalMigrationRateTable
 
 
-def RunPipeline(config):
+def RunPipeline(config, start_population_size):
     """ Run the daedalus Microsimulation pipeline
 
    Parameters
     ----------
     config : ConfigTree
         Config file to run the pipeline
-
+    start_population_size: int
+        Size of the starting population
     Returns:
     --------
      A dataframe with the resulting simulation
@@ -35,18 +37,21 @@ def RunPipeline(config):
 
     # Set up the components using the config.
 
-    components = [TestPopulation(), Immigration(),
-                  InternalMigration(), Mortality(), Emigration(), FertilityAgeSpecificRates()]
+    config.update({
+            'population': {
+            'population_size': start_population_size,
+        }}, source=str(Path(__file__).resolve()))
+
+    components = [TestPopulation(),InternalMigration(), Mortality(), Emigration(), FertilityAgeSpecificRates(),Immigration()]
 
     simulation = InteractiveContext(components=components,
                                     configuration=config,
                                     plugin_configuration=utils.base_plugins(),
                                     setup=False)
 
-    num_days = config.configuration.time.num_days
+    num_days = config.time.num_days
 
     # setup internal migration matrices
-
     OD_matrices = InternalMigrationMatrix(configuration=config)
     OD_matrices.set_matrix_tables()
     simulation._data.write("internal_migration.MSOA_index", OD_matrices.MSOA_location_index)
