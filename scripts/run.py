@@ -10,7 +10,7 @@ import yaml
 from daedalus.VphSpenserPipeline.RunPipeline import RunPipeline
 
 
-def run_pipeline(config, location=None, input_data_dir=None, persistent_data_dir=None, output_dir=None):
+def run_pipeline(configuration_file, location=None, input_data_dir=None, persistent_data_dir=None, output_dir=None):
     """
     Given an basic input config file and data directory information configure the
      vivarium public health spenser pipeline and run it.
@@ -29,11 +29,12 @@ def run_pipeline(config, location=None, input_data_dir=None, persistent_data_dir
         Path to the directory where the output data should be saved
     """
 
+    config = utils.get_config(configuration_file)
 
     ## get the input information obtained from the CLI
     if location:
         config.update({
-            'location': args.location,
+            'location': location,
             }, source=str(Path(__file__).resolve()))
     else:
         try:
@@ -55,7 +56,7 @@ def run_pipeline(config, location=None, input_data_dir=None, persistent_data_dir
                   'config file, please provide one with the --input_data_dir flag')
 
     if persistent_data_dir:
-        persistent_data_dir = args.persistent_data_dir
+        persistent_data_dir = persistent_data_dir
         config.update({
             'persistent_data_dir': persistent_data_dir,
         }, source=str(Path(__file__).resolve()))
@@ -67,7 +68,7 @@ def run_pipeline(config, location=None, input_data_dir=None, persistent_data_dir
                   'config file, please provide one with the --persistent_data_dir flag')
 
     if output_dir:
-        output_dir = args.output_dir
+        output_dir = output_dir
         config.update({
             'output_dir': output_dir,
         }, source=str(Path(__file__).resolve()))
@@ -151,6 +152,6 @@ if __name__ == "__main__":
     parser.add_argument('--output_dir', type=str, help='directory where the output data is saved', default=None)
 
     args = parser.parse_args()
-    configuration = utils.get_config(args.config)
+    configuration_file = args.config
 
-    run_pipeline(configuration, args.location, args.input_data_dir, args.persistent_data_dir, args.output_dir)
+    run_pipeline(configuration_file, args.location, args.input_data_dir, args.persistent_data_dir, args.output_dir)
