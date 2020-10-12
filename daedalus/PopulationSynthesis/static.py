@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 # from random import randint
 
-import humanleague as hl
+#import humanleague as hl
 import ukpopulation.nppdata as nppdata
 import ukpopulation.snppdata as snppdata
 import ukpopulation.customsnppdata as customsnppdata
