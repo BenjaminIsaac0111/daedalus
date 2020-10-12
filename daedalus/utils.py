@@ -3,10 +3,14 @@ utility functions
 """
 
 import argparse
+import glob
 import yaml
 import numpy as np
+import os
 import pandas as pd
 #import humanleague as hl
+from scipy.sparse import coo_matrix
+import scipy
 
 from vivarium.config_tree import ConfigTree
 
@@ -271,3 +275,31 @@ def prepare_dataset(dataset_path="../daedalus/persistent_data/ssm_E08000032_MSOA
     dataset.to_csv(output_path, index=False)
     print(f"\nWrite the dataset at: {output_path}")
 
+
+def make_od_matrices_sparse(path2csv, row_threshold=10):
+    """Make OD matrices sparse
+
+    Args:
+        path2csv: path to csv files, wildcards are accepted
+        row_threshold (int, optional): all values less than row_max / row_threshold will be set to zero. Defaults to 10.
+    """
+
+    list_of_files = glob.glob(path2csv)
+
+    for i, fi_rel in enumerate(list_of_files):
+        fi = os.path.abspath(fi_rel)
+        print(f"Processing: {fi}")
+        
+        od_weights = pd.read_csv(fi).values
+        od_val_w = od_weights[:, 1:]
+        od_val_w = od_val_w.astype(np.float)
+        
+        # weights ---> probability distributions for each row
+        od_val_w = od_val_w/np.sum(od_val_w, axis=1)[:, None]
+    
+        for j in range(od_val_w.shape[0]):
+            row_threshold_adjust = np.max(od_val_w[j, :]) / row_threshold
+            od_val_w[j, od_val_w[j, :] < row_threshold_adjust] = 0
+        
+        od_val_sparse = coo_matrix(od_val_w)
+        scipy.sparse.save_npz(os.path.basename(fi).split(".csv")[0] + ".npz", od_val_sparse)
