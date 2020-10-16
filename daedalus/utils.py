@@ -259,8 +259,6 @@ def prepare_dataset(dataset_path="../daedalus/persistent_data/ssm_E08000032_MSOA
         code_ethnicity = dict(zip(lookup['Base population file (persistent data) From "C_ETHPUK11"'],
                                   lookup['Rate to use (from NewEthpop outputs) Code']))
         dataset.replace({"ethnicity": code_ethnicity}, inplace=True)
-        print("\n\nWARNING: BLO ethnicity is removed from the dataset")
-        dataset = dataset[~dataset['ethnicity'].isin(["BLO"])]
     if location_code:
         dataset['MSOA'] = dataset['location']
         dataset['location'] = location_code
