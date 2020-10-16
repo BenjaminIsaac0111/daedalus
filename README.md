@@ -24,7 +24,7 @@ The Daedalus setup.py should install the correct versions but I tell you this ju
 
 Example; if you need to install the UKPopulation component then either clone its repo and within the cloned directory, do a 
 
-`pip install .` 
+`pip install -v -e .` 
 
 or install using 
 
