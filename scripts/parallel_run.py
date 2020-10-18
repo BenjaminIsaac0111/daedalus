@@ -13,6 +13,7 @@ __author__ = "Kasra Hosseini (khosseini@turing.ac.uk)"
 #   
 
 import argparse
+from datetime import datetime
 from glob import glob
 import multiprocessing
 import os
@@ -29,6 +30,7 @@ def run_pipeline_location_list(configuration_file,
     """Run `run.py` for a list of locations."""
 
     for one_location in location_list:
+        start_time = datetime.now()
         try:
             run_pipeline(configuration_file, 
                         one_location, 
@@ -39,6 +41,7 @@ def run_pipeline_location_list(configuration_file,
             fio = open(os.path.join(output_dir, "error_log.txt"), "a+")
             fio.writelines(err + "\n")
             fio.close()
+        print("Time to process/simulation, {}: {}".format(one_location, datetime.now() - start_time))
 
 # ----------------------
 def check_par_jobs(jobs, sleep_time=1):
