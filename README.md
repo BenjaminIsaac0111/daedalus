@@ -100,10 +100,10 @@ In these tutorials, we use the following command:
 python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
 ```
 
-Output:
+Expected output:
 
 ```text
-❯ python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output                                                                                                                                                                                                               ─╯
+❯ python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
 Start Population Size: 524213
 Write config file successful
 
@@ -127,6 +127,54 @@ Start simulation setup
 2020-10-20 12:04:50
 2020-10-20 12:04:50.422 | DEBUG    | vivarium.framework.values:register_value_modifier:373 - Registering metrics.1.population_manager.metrics as modifier to metrics
 2020-10-20 12:29:13.249 | DEBUG    | vivarium.framework.values:_register_value_producer:323 - Registering value pipeline int_outmigration_rate
+2020-10-20 12:53:14.599 | DEBUG    | vivarium.framework.values:_register_value_producer:323 - Registering value pipeline mortality_rate
+2020-10-20 13:16:42.556 | DEBUG    | vivarium.framework.values:_register_value_producer:323 - Registering value pipeline emigration_rate
+2020-10-20 13:24:55.896 | DEBUG    | vivarium.framework.values:_register_value_producer:323 - Registering value pipeline fertility rate
+2020-10-20 13:24:55.896 | DEBUG    | vivarium.framework.values:_register_value_producer:323 - Registering value pipeline metrics
+2020-10-20 13:26:39.657 | DEBUG    | vivarium.framework.engine:step:140 - 2011-01-01 00:00:00
+2020-10-20 13:27:57.277 | DEBUG    | vivarium.framework.engine:step:140 - 2011-01-11 00:00:00
+2020-10-20 13:28:54.614 | DEBUG    | vivarium.framework.engine:step:140 - 2011-01-21 00:00:00
+2020-10-20 13:30:03.109 | DEBUG    | vivarium.framework.engine:step:140 - 2011-01-31 00:00:00
+2020-10-20 13:31:11.185 | DEBUG    | vivarium.framework.engine:step:140 - 2011-02-10 00:00:00
+2020-10-20 13:32:08.721 | DEBUG    | vivarium.framework.engine:step:140 - 2011-02-20 00:00:00
+2020-10-20 13:33:11.799 | DEBUG    | vivarium.framework.engine:step:140 - 2011-03-02 00:00:00
+2020-10-20 13:34:15.401 | DEBUG    | vivarium.framework.engine:step:140 - 2011-03-12 00:00:00
+2020-10-20 13:35:26.567 | DEBUG    | vivarium.framework.engine:step:140 - 2011-03-22 00:00:00
+2020-10-20 13:36:27.414 | DEBUG    | vivarium.framework.engine:step:140 - 2011-04-01 00:00:00
+2020-10-20 13:37:37.768 | DEBUG    | vivarium.framework.engine:step:140 - 2011-04-11 00:00:00
+2020-10-20 13:38:54.107 | DEBUG    | vivarium.framework.engine:step:140 - 2011-04-21 00:00:00
+2020-10-20 13:39:53.323 | DEBUG    | vivarium.framework.engine:step:140 - 2011-05-01 00:00:00
+2020-10-20 13:41:12.803 | DEBUG    | vivarium.framework.engine:step:140 - 2011-05-11 00:00:00
+2020-10-20 13:42:32.034 | DEBUG    | vivarium.framework.engine:step:140 - 2011-05-21 00:00:00
+2020-10-20 13:43:44.056 | DEBUG    | vivarium.framework.engine:step:140 - 2011-05-31 00:00:00
+2020-10-20 13:44:55.048 | DEBUG    | vivarium.framework.engine:step:140 - 2011-06-10 00:00:00
+2020-10-20 13:46:13.413 | DEBUG    | vivarium.framework.engine:step:140 - 2011-06-20 00:00:00
+2020-10-20 13:47:17.833 | DEBUG    | vivarium.framework.engine:step:140 - 2011-06-30 00:00:00
+2020-10-20 13:48:37.467 | DEBUG    | vivarium.framework.engine:step:140 - 2011-07-10 00:00:00
+2020-10-20 13:49:54.801 | DEBUG    | vivarium.framework.engine:step:140 - 2011-07-20 00:00:00
+2020-10-20 13:51:21.094 | DEBUG    | vivarium.framework.engine:step:140 - 2011-07-30 00:00:00
+2020-10-20 13:52:46.625 | DEBUG    | vivarium.framework.engine:step:140 - 2011-08-09 00:00:00
+2020-10-20 13:54:01.570 | DEBUG    | vivarium.framework.engine:step:140 - 2011-08-19 00:00:00
+2020-10-20 13:55:06.145 | DEBUG    | vivarium.framework.engine:step:140 - 2011-08-29 00:00:00
+2020-10-20 13:56:04.882 | DEBUG    | vivarium.framework.engine:step:140 - 2011-09-08 00:00:00
+2020-10-20 13:57:12.043 | DEBUG    | vivarium.framework.engine:step:140 - 2011-09-18 00:00:00
+2020-10-20 13:58:07.850 | DEBUG    | vivarium.framework.engine:step:140 - 2011-09-28 00:00:00
+2020-10-20 13:59:14.272 | DEBUG    | vivarium.framework.engine:step:140 - 2011-10-08 00:00:00
+2020-10-20 14:00:29.067 | DEBUG    | vivarium.framework.engine:step:140 - 2011-10-18 00:00:00
+2020-10-20 14:01:45.110 | DEBUG    | vivarium.framework.engine:step:140 - 2011-10-28 00:00:00
+2020-10-20 14:02:53.453 | DEBUG    | vivarium.framework.engine:step:140 - 2011-11-07 00:00:00
+2020-10-20 14:04:23.663 | DEBUG    | vivarium.framework.engine:step:140 - 2011-11-17 00:00:00
+2020-10-20 14:05:29.141 | DEBUG    | vivarium.framework.engine:step:140 - 2011-11-27 00:00:00
+2020-10-20 14:06:37.390 | DEBUG    | vivarium.framework.engine:step:140 - 2011-12-07 00:00:00
+2020-10-20 14:07:49.889 | DEBUG    | vivarium.framework.engine:step:140 - 2011-12-17 00:00:00
+2020-10-20 14:08:51.414 | DEBUG    | vivarium.framework.engine:step:140 - 2011-12-27 00:00:00
+Finished running simulation
+alive 532578
+dead 4121
+emigrated 1545
+internal migration 16838
+New children 9522
+Immigrants 4509
 ```
 
 ## Speeding up simulations over several LADs by parallelization
