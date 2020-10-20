@@ -65,6 +65,8 @@ pip install -v -e .
 
 Daedalus can be run via command line. In these tutorials, we use the following command:
 
+:warning: This takes ~XXX minutes to finish.
+
 ```bash
 python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
 ```
