@@ -94,7 +94,7 @@ optional arguments:
 
 In these tutorials, we use the following command:
 
-:warning: This takes ~XXX minutes to finish.
+:warning: This takes around 2 to 3 hours (depending on your machine) to finish.
 
 ```bash
 python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
@@ -180,7 +180,7 @@ Immigrants 4509
 ## Speeding up simulations over several LADs by parallelization
 
 In the previous [section](#run-daedalus-via-command-line), we ran the simulation over one LAD (specified by `--location E08000032`).
-The simulation took around XXX minutes. 
+The simulation took around 2 to 3 hours to finish. 
 To speed up the simulations over severals LADs, Daedalus can be run in parallel. 
 For example, the following command line runs daedalus over five LADs in parallel 
 (note `--process_np` specifies the number of processes to be run in parallel):
@@ -229,6 +229,20 @@ optional arguments:
 ```
 
 
-## Evaluate the results
+## Evaluate and plot the results
+
+After running the simulation in [section: Run Daedalus via command line](#run-daedalus-via-command-line), 
+an `output` directory is created (specified by `--output_dir` argument). 
+In our example, it contains the following files:
+
+```bash
+output
+└── E08000032
+    ├── config_file_E08000032.yml
+    ├── ssm_E08000032_MSOA11_ppp_2011_processed.csv
+    └── ssm_E08000032_MSOA11_ppp_2011_simulation.csv
+```
+
+Next, we will evaluate and plot the results in this [notebook](XXX).
 
 ## Plot the results
