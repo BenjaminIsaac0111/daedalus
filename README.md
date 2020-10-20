@@ -63,15 +63,7 @@ pip install -v -e .
 
 ## Run Daedalus via command line
 
-Daedalus can be run via command line. In these tutorials, we use the following command:
-
-:warning: This takes ~XXX minutes to finish.
-
-```bash
-python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
-```
-
-The following command displays all available options:
+Daedalus can be run via command line. The following command displays all available options:
 
 ```bash
 python scripts/run.py --help
@@ -98,6 +90,43 @@ optional arguments:
                         directory where the persistent data is
   --output_dir OUTPUT_DIR
                         directory where the output data is saved
+```
+
+In these tutorials, we use the following command:
+
+:warning: This takes ~XXX minutes to finish.
+
+```bash
+python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
+```
+
+Output:
+
+```text
+❯ python scripts/run.py -c config/default_config.yaml --location E08000032 --input_data_dir data --persistent_data_dir persistent_data --output_dir output                                                                                                                                                                                                               ─╯
+Start Population Size: 524213
+Write config file successful
+
+Write the dataset at: output/E08000032/ssm_E08000032_MSOA11_ppp_2011_processed.csv
+Computing immigration rate table...
+Computing internal migration rate table...
+Caching rate table...
+Cached to persistent_data/integral_migration_rate_table.csv
+Computing mortality rate table...
+Caching rate table...
+Cached to persistent_data/mortality_rate_table.csv
+Computing fertility rate table...
+Caching rate table...
+Cached to persistent_data/fertility_rate_table.csv
+Computing emigration rate table...
+Caching rate table...
+Cached to persistent_data/emigration_rate_table.csv
+Fetching rate table from catch persistent_data/immigration_rate_table_E08000032.csv
+Computing total immigration number for location E08000032
+Start simulation setup
+2020-10-20 12:04:50
+2020-10-20 12:04:50.422 | DEBUG    | vivarium.framework.values:register_value_modifier:373 - Registering metrics.1.population_manager.metrics as modifier to metrics
+2020-10-20 12:29:13.249 | DEBUG    | vivarium.framework.values:_register_value_producer:323 - Registering value pipeline int_outmigration_rate
 ```
 
 ## Speeding up simulations over several LADs by parallelization
