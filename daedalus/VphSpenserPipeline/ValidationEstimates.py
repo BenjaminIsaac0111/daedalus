@@ -2,19 +2,34 @@
 import pandas as pd
 import os
 
-def compare_summary_estimates(simulation_data, ONS_data, LADcode, n_year):
+def compare_summary_estimates(simulation_data, ONS_data, location, n_years):
+    '''Function that compares the outputs of the simulation with the estimates from
+    the ONS. Total values are compared.
+ Parameters
+    ----------
+    simulation_data : Dataframe
+        Input data from the VPH simulation
+    ONS_data : Dataframe
+        Summary estimates from the ONS existing in the persistent data
+    location: str
+        LAD code for place to run the simulation
+    n_years: int
+        Number of years the simulation was ran for
+    '''
 
-    ONS_data_LAD = ONS_data[ONS_data['ladcode20']==LADcode]
+    starting_year = 2011
+
+    ONS_data_LAD = ONS_data[ONS_data['ladcode20'] == location]
 
     columns = ['population','births','deaths', 'internal_out',  'international_in',
                'international_out']
 
-    years = [(2011+year) for year in range(1,n_year+1)]
+    years = [(starting_year+year) for year in range(1, n_years + 1)]
 
     total_values = {}
 
-    total_values["location"] = LADcode
-    total_values["year"] = 2011+n_year
+    total_values["location"] = location
+    total_values["year"] = starting_year + n_years
     for col in columns:
         if col == 'population':
             continue
@@ -25,7 +40,7 @@ def compare_summary_estimates(simulation_data, ONS_data, LADcode, n_year):
 
         total_values["ONS_total_"+col] = count
 
-    total_values["ONS_total_population"] = ONS_data_LAD["population""_" + str(2011+n_year)].values[0]
+    total_values["ONS_total_population"] = ONS_data_LAD["population""_" + str(starting_year + n_years)].values[0]
 
     # print some summary stats on the simulation
     total_values["simulation_population"] = len(simulation_data[simulation_data['alive'] == 'alive'])
