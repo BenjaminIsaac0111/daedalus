@@ -7,7 +7,6 @@ import os
 
 def test_compare_summary_estimates():
 
-    #simulation_data_file = os.path.join('tests','data','ssm_E08000032_MSOA11_ppp_2011_simulation.csv')
     simulation_data_file = os.path.join('tests','data','ssm_E08000033_MSOA11_ppp_2011_simulation.csv')
 
     ONS_data_file = os.path.join('persistent_data','MYEB3_summary_components_of_change_series_UK_(2019_geog20).csv')
