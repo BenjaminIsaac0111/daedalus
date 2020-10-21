@@ -243,6 +243,23 @@ output
     └── ssm_E08000032_MSOA11_ppp_2011_simulation.csv
 ```
 
-Next, we will evaluate and plot the results in this [notebook](XXX).
+Next, we will evaluate and plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
 
-## Plot the results
+<p align="center">
+<img src="./figs/fig1.png" width="70%">
+</p>
+
+In another [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_maps.ipynb),
+the results are plotted on maps. 
+We use the `cartopy` library to plot maps in this notebook. 
+`cartopy` is not installed by default. Please follow the instructions here:
+
+https://scitools.org.uk/cartopy/docs/latest/installing.html
+
+<p align="center">
+<img src="./figs/fig2.png" width="50%">
+</p>
+
+<p align="center">
+<img src="./figs/fig3.png" width="50%">
+</p>
