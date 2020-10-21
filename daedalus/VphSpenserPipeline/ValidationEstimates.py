@@ -2,7 +2,7 @@
 import pandas as pd
 import os
 
-def compare_summary_estimates(simulation_data, ONS_data, location, n_years):
+def compare_summary_estimates(simulation_data, ONS_data, location, n_years, detailed = False):
     '''Function that compares the outputs of the simulation with the estimates from
     the ONS. Total values are compared.
  Parameters
@@ -15,6 +15,8 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years):
         LAD code for place to run the simulation
     n_years: int
         Number of years the simulation was ran for
+    detailed: bool
+        If this function is being used for a age, gender detailed comparison
     '''
 
     starting_year = 2011
@@ -31,7 +33,7 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years):
     total_values["location"] = location
     total_values["year"] = starting_year + n_years
     for col in columns:
-        if col == 'population':
+        if col == 'population' and detailed==False:
             continue
         count = 0
         for y in years:
@@ -40,7 +42,8 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years):
 
         total_values["ONS_total_"+col] = count
 
-    total_values["ONS_total_population"] = ONS_data_LAD["population""_" + str(starting_year + n_years)].values[0]
+    if detailed==False:
+        total_values["ONS_total_population"] = ONS_data_LAD["population""_" + str(starting_year + n_years)].values[0]
 
     # print some summary stats on the simulation
     total_values["simulation_population"] = len(simulation_data[simulation_data['alive'] == 'alive'])
@@ -61,3 +64,43 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years):
 
     return pd.DataFrame.from_dict([total_values])
 
+def compare_detailed_estimates(simulation_data, ONS_data, location, n_years):
+    '''Function that compares the outputs of the simulation with the estimates from
+    the ONS. Detailed gender and age values are compared.
+ Parameters
+    ----------
+    simulation_data : Dataframe
+        Input data from the VPH simulation
+    ONS_data : Dataframe
+        Summary estimates from the ONS existing in the persistent data
+    location: str
+        LAD code for place to run the simulation
+    n_years: int
+        Number of years the simulation was ran for
+    '''
+
+    ONS_data = ONS_data[ONS_data['ladcode20'] == location]
+
+    df_list = []
+    for sex in [1,2]:
+
+        simulation_data_sex = simulation_data[simulation_data['sex']==sex]
+        ONS_data_sex = ONS_data[ONS_data['sex']==sex]
+
+        for age in range (0,90):
+
+            simulation_data_sex_age = simulation_data_sex[
+                    (simulation_data_sex['age'] >= age) & (simulation_data_sex['age'] < age + n_years)]
+
+            ONS_data_sex_age = ONS_data_sex[ONS_data_sex['age'] == age]
+
+            df = compare_summary_estimates(simulation_data_sex_age, ONS_data_sex_age, location, n_years, True)
+            df['age_start'] = age
+            df['age_end'] = age+n_years
+            df['sex'] = sex
+
+            df_list.append(df)
+
+    df_output = pd.concat(df_list)
+
+    return df_output
