@@ -22,4 +22,4 @@ OD_matrix_index_file: 'MSOA_to_OD_index.csv'
 internal_outmigration_file: 'InternalOutmig2011_LEEDS2.csv'
 immigration_MSOA : 'Immigration_MSOA_M_F.csv'
 ethnic_lookup: 'ethnic_lookup.csv'
-components : [TestPopulation()]
+components : [TestPopulation(),Immigration()]
