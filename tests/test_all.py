@@ -7,7 +7,7 @@ from vivarium import InteractiveContext
 
 from daedalus.RateTables import ImmigrationRateTable
 from daedalus.utils import get_config
-from daedalus.PopulationSynthesis import static
+#from daedalus.PopulationSynthesis import static
 
 from daedalus.RateTables import FertilityRateTable
 from daedalus.RateTables import MortalityRateTable
