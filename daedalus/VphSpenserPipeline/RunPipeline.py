@@ -60,7 +60,6 @@ def RunPipeline(config, start_population_size):
         simulation._data.write("internal_migration.LAD_index", OD_matrices.LAD_location_index)
         simulation._data.write("internal_migration.MSOA_LAD_indices", OD_matrices.df_OD_matrix_with_LAD)
         simulation._data.write("internal_migration.path_to_OD_matrices", config.path_to_OD_matrices)
-        simulation._data.write("cause.all_causes.immigration_to_MSOA", pd.read_csv(config.path_to_immigration_MSOA))
 
         # setup internal migraionts rates
         asfr_int_migration = InternalMigrationRateTable(configuration=config)
@@ -94,6 +93,7 @@ def RunPipeline(config, start_population_size):
         asfr_immigration = ImmigrationRateTable(configuration=config)
         asfr_immigration.set_rate_table()
         asfr_immigration.set_total_immigrants()
+        simulation._data.write("cause.all_causes.immigration_to_MSOA", pd.read_csv(config.path_to_immigration_MSOA))
         simulation._data.write("cause.all_causes.cause_specific_immigration_rate",
                            asfr_immigration.rate_table)
         simulation._data.write("cause.all_causes.cause_specific_total_immigrants_per_year",
