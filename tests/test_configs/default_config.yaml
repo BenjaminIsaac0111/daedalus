@@ -23,3 +23,14 @@ internal_outmigration_file: 'InternalOutmig2011_LEEDS2.csv'
 immigration_MSOA : 'Immigration_MSOA_M_F.csv'
 ethnic_lookup: 'ethnic_lookup.csv'
 components : [TestPopulation()]
+scale_rates:
+    # methods:
+    # constant: all rates regardless of age/sex/... will be multiplied by the specified factor
+    #           if 1, the original rates will be usd
+    method: "constant"
+    constant:
+        mortality: 1
+        fertility: 1
+        emigration: 1
+        immigration: 1
+        internal_migration: 1
