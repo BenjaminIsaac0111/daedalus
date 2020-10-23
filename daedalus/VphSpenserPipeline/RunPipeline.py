@@ -100,7 +100,8 @@ def RunPipeline(config, start_population_size):
 
     print('Start running simulation')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    simulation.run_for(duration=pd.Timedelta(days=num_days))
+
+    simulation.run_for(duration=pd.Timedelta(months=12))
 
     print('Finished running simulation')
     print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
