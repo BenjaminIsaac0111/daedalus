@@ -125,6 +125,7 @@ def RunPipeline(config, start_population_size):
         output_data_filename = 'ssm_' + config.location + '_MSOA11_ppp_2011_simulation_year_'+str(year)+'.csv'
         pop.to_csv(os.path.join(year_output_dir, output_data_filename))
 
+        print ()
         print ('In year: ',config.time.start.year + year)
         # print some summary stats on the simulation
         print('alive', len(pop[pop['alive'] == 'alive']))
