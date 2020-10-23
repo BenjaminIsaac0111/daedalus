@@ -21,37 +21,10 @@ from vivarium.config_tree import ConfigTree
 
 @pytest.fixture()
 def configuration():
-    with open('tests/test_configs/test_config.yaml') as config_file:
-        configuration = ConfigTree(yaml.full_load(config_file))
 
-    configuration.update({
-        'population': {
-            'age_start': 0,
-            'age_end': 100,
-            'population_size': len(pd.read_csv(configuration.paths.path_to_pop_file))
-        },
-        'time': {
-            'start': {'year': 2011},
-            'end': {'year': 2012},
-            'step_size': 20
-        },
-        'randomness': {'key_columns': ['entrance_time', 'age']}
-    }, source=str(Path(__file__).resolve()))
+    configuration = get_config("tests/test_configs/test_config.yaml")
+
     return configuration
-
-
-@pytest.fixture()
-def base_plugins():
-    config = {'required': {
-        'data': {
-            'controller': 'vivarium_public_health.testing.mock_artifact.MockArtifactManager',
-            'builder_interface': 'vivarium.framework.artifact.ArtifactInterface'
-        }
-    }
-    }
-
-    return ConfigTree(config)
-
 
 # TODO These tests are for the Synthesing the populations as MSOA11 level. They need the DUMMY key to work.
 
