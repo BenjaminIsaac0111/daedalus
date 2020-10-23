@@ -6,7 +6,7 @@ time:
     start: {year: 2011, month: 1, day: 1}
     end:   {year: 2012, month: 1, day: 1}
     step_size: 30.4375  # Days
-    num_years: 2
+    num_years: 3
 population:
     age_start: 0
     age_end: 100

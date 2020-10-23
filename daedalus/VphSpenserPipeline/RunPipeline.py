@@ -114,8 +114,12 @@ def RunPipeline(config, start_population_size):
         print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         pop = simulation.get_population()
 
+        # assign age brackets to the individuals
+
+        pop = utils.get_age_bucket(pop)
+
         # save the output file to csv
-        year_output_dir = os.path.join(os.path.join(config.output_dir,config.location,str(year)))
+        year_output_dir = os.path.join(os.path.join(config.output_dir,config.location,'year_'+str(year)))
         os.makedirs(year_output_dir, exist_ok=True)
 
         output_data_filename = 'ssm_' + config.location + '_MSOA11_ppp_2011_simulation_year_'+str(year)+'.csv'
