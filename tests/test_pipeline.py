@@ -3,6 +3,7 @@ import yaml
 import pandas as pd
 from os.path import exists
 from daedalus.VphSpenserPipeline.ValidationEstimates import compare_summary_estimates, compare_detailed_estimates
+from scripts.run import run_pipeline
 import os
 
 def test_compare_summary_estimates():
@@ -16,22 +17,33 @@ def test_compare_summary_estimates():
 
     summary_df = compare_summary_estimates(simulation_data,ONS_data,"E08000033",3)
 
-    summary_df.to_csv('comparison_summary_df.csv')
+    summary_df.to_csv(os.path.join('tests','data','comparison_summary_df.csv'))
 
     assert (summary_df.shape[0]==1)
 
-def test_compare_detailed_estimates():
+# def test_compare_detailed_estimates():
+#
+#     simulation_data_file = os.path.join('tests','data','ssm_E08000032_MSOA11_ppp_2011_simulation.csv')
+#
+#     ONS_data_file = os.path.join('persistent_data','MYEB2_detailed_components_of_change_series_EW_(2019_geog20).csv')
+#
+#     simulation_data = pd.read_csv(simulation_data_file)
+#     ONS_data = pd.read_csv(ONS_data_file)
+#
+#     summary_df = compare_detailed_estimates(simulation_data,ONS_data,'E08000032',1)
+#     summary_df.to_csv(os.path.join('tests','data','comparison_detailed_df.csv'))
+#
+#     assert (summary_df.shape[0]>1)
 
-    simulation_data_file = os.path.join('tests','data','ssm_E08000032_MSOA11_ppp_2011_simulation.csv')
+def test_run_pipeline():
 
-    ONS_data_file = os.path.join('persistent_data','MYEB2_detailed_components_of_change_series_EW_(2019_geog20).csv')
+    configuration_file = os.path.join('tests', 'test_configs','default_config.yaml')
+    location = 'E08000032'
+    input_data_dir = os.path.join('tests', 'data')
+    persistent_data_dir = 'persistent_data'
+    output_dir = os.path.join('tests', 'outputs')
 
-    simulation_data = pd.read_csv(simulation_data_file)
-    ONS_data = pd.read_csv(ONS_data_file)
+    run_pipeline(configuration_file, location, input_data_dir, persistent_data_dir, output_dir)
 
-    summary_df = compare_detailed_estimates(simulation_data,ONS_data,'E08000032',1)
-    summary_df.to_csv('comparison_detailed_df.csv')
-
-    assert (summary_df.shape[0]>1)
 
 
