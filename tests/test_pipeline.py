@@ -44,3 +44,16 @@ def test_run_pipeline():
     output_dir = os.path.join('tests', 'outputs')
 
     run_pipeline(configuration_file, location, input_data_dir, persistent_data_dir, output_dir)
+
+    assert exists(os.path.join(output_dir,location))
+
+    # based on input location, get the input files that will be used in the simulation
+    input_data_raw_filename = 'ssm_' + location + '_MSOA11_ppp_2011.csv'
+    start_population_size = len(pd.read_csv("{}/{}".format(input_data_dir, input_data_raw_filename)))
+
+    # output directory where all files from the run are saved
+    output_data_filename = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'
+    pop = pd.read_csv(os.path.join(output_dir,location, output_data_filename))
+
+    end_population_size = len(pop[pop['alive'] == 'alive'])
+    assert (start_population_size < end_population_size)
