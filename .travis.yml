@@ -9,14 +9,14 @@ matrix:
       python:
         - 3.7
       install:
-        - pip install git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi
-        - pip install git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation
-        - pip install git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague
-        - pip install git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth
-        - pip install git+https://github.com/nismod/microsimulation.git@Development#egg=microsimulation
+#        - pip install git+https://github.com/BenjaminIsaac0111/UKCensusAPI.git@Development#egg=ukcensusapi
+#        - pip install git+https://github.com/nismod/ukpopulation.git@Development#egg=ukpopulation
+#        - pip install git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague
+#        - pip install git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth
+#        - pip install git+https://github.com/nismod/microsimulation.git@Development#egg=microsimulation
         - pip install .
       script:
-        - python -m unittest tests/test_all.py
+        - pytest
 
 warnings_are_errors: false
 
