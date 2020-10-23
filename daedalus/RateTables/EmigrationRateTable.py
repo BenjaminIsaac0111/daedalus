@@ -8,7 +8,8 @@ from os import remove
 class EmigrationRateTable(BaseHandler):
     def __init__(self, configuration):
         super().__init__(configuration=configuration)
-        self.filename = 'emigration_rate_table.csv'
+        self.scaling_method = self.configuration["scale_rates"]["method"]
+        self.filename = f'emigration_rate_table_{self.configuration["scale_rates"][self.scaling_method]["emigration"]}.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
         self.source_file = self.configuration.path_to_emigration_file
         self.total_population_file = self.configuration.path_to_total_population_file
@@ -22,3 +23,7 @@ class EmigrationRateTable(BaseHandler):
                                                        2012,
                                                        self.configuration.population.age_start,
                                                        self.configuration.population.age_end)
+
+        if self.configuration["scale_rates"][self.scaling_method]["emigration"] != 1:
+            print(f'Scaling the emigration rates by a factor of {self.configuration["scale_rates"][self.scaling_method]["emigration"]}')
+            self.rate_table["mean_value"] *= float(self.configuration["scale_rates"][self.scaling_method]["emigration"])
