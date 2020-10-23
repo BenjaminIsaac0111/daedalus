@@ -14,7 +14,7 @@ matrix:
 #        - pip install git+https://github.com/BenjaminIsaac0111/humanleague.git@Development#egg=humanleague
 #        - pip install git+https://github.com/nismod/household_microsynth.git@Development#egg=household_microsynth
 #        - pip install git+https://github.com/nismod/microsimulation.git@Development#egg=microsimulation
-        - pip install .
+        - pip install -v -e .
       script:
         - pytest
 
