@@ -301,3 +301,35 @@ def make_od_matrices_sparse(path2csv, row_threshold=10):
         
         od_val_sparse = coo_matrix(od_val_w)
         scipy.sparse.save_npz(os.path.basename(fi).split(".csv")[0] + ".npz", od_val_sparse)
+
+
+def get_age_bucket(simulation_data):
+    """
+    Assign age bucket to an input population. These are the age buckets:
+    0 - 15;
+    16 - 19;
+    20 - 24;
+    25 - 29;
+    30 - 44;
+    45 - 59;
+    60 - 74;
+    75 +
+
+    Parameters
+    ----------
+    simulation_data : Dataframe
+        Input data from the VPH simulation
+
+    Returns:
+    -------
+    A dataframe with a new column with the age bucket.
+
+    """
+    # Age buckets based on the file names 
+
+
+    cut_bins = [-1, 16, 20, 25, 30, 45, 60, 75, 200]
+    cut_labels = ["0to15", "16to19", "20to24", "25to29", "30to44", "45to59", "60to74", "75plus"]
+    simulation_data.loc[:, "age_bucket"] = pd.cut(simulation_data['age'], bins=cut_bins, labels=cut_labels)
+
+    return simulation_data

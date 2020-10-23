@@ -6,7 +6,7 @@ time:
     start: {year: 2011, month: 1, day: 1}
     end:   {year: 2012, month: 1, day: 1}
     step_size: 30.4375  # Days
-    num_years: 2
+    num_years: 3
 population:
     age_start: 0
     age_end: 100
@@ -22,4 +22,4 @@ OD_matrix_index_file: 'MSOA_to_OD_index.csv'
 internal_outmigration_file: 'InternalOutmig2011_LEEDS2.csv'
 immigration_MSOA : 'Immigration_MSOA_M_F.csv'
 ethnic_lookup: 'ethnic_lookup.csv'
-components : [TestPopulation(),InternalMigration(), Mortality(), Emigration(), FertilityAgeSpecificRates(),Immigration()]
+components : [TestPopulation(),Immigration()]

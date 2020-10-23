@@ -127,17 +127,24 @@ def run_pipeline(configuration_file, location=None, input_data_dir=None, persist
     # run the pipeline
     pop = RunPipeline(config, start_population_size)
 
+    print('Finished running the full simulation')
     # save the output file to csv
     output_data_filename = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'
     pop.to_csv(os.path.join(run_output_dir, output_data_filename))
 
-    # print some summary stats on the simulation
+ # print some summary stats on the simulation
     print('alive', len(pop[pop['alive'] == 'alive']))
-    print('dead', len(pop[pop['alive'] == 'dead']))
-    print('emigrated', len(pop[pop['alive'] == 'emigrated']))
-    print('internal migration', len(pop[pop['previous_MSOA_locations'] != '']))
-    print('New children', len(pop[pop['parent_id'] != -1]))
-    print('Immigrants', len(pop[pop['immigrated'].astype(str) == 'Yes']))
+
+    if 'Mortality()' in config.components:
+        print('dead', len(pop[pop['alive'] == 'dead']))
+    if 'Emigration()' in config.components:
+        print('emigrated', len(pop[pop['alive'] == 'emigrated']))
+    if 'InternalMigration()' in config.components:
+        print('internal migration', len(pop[pop['internal_outmigration'] != '']))
+    if 'FertilityAgeSpecificRates()' in config.components:
+        print('New children', len(pop[pop['parent_id'] != -1]))
+    if 'Immigration()' in config.components:
+        print('Immigrants', len(pop[pop['immigrated'].astype(str) == 'Yes']))
 
 
 if __name__ == "__main__":
