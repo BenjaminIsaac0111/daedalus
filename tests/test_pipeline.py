@@ -2,7 +2,7 @@ import pytest
 import yaml
 import pandas as pd
 from os.path import exists
-from daedalus.VphSpenserPipeline.ValidationEstimates import compare_summary_estimates, compare_detailed_estimates
+from daedalus.VphSpenserPipeline.ValidationEstimates import compare_estimates, compare_detailed_estimates
 from scripts.run import run_pipeline
 import os
 
@@ -15,7 +15,7 @@ def test_compare_summary_estimates():
     simulation_data = pd.read_csv(simulation_data_file)
     ONS_data = pd.read_csv(ONS_data_file)
 
-    summary_df = compare_summary_estimates(simulation_data,ONS_data,"E08000033",3)
+    summary_df = compare_estimates(simulation_data, ONS_data, "E08000033", 3)
 
     summary_df.to_csv(os.path.join('tests','data','comparison_summary_df.csv'))
 
@@ -30,10 +30,12 @@ def test_compare_detailed_estimates():
     simulation_data = pd.read_csv(simulation_data_file)
     ONS_data = pd.read_csv(ONS_data_file)
 
-    summary_df = compare_detailed_estimates(simulation_data,ONS_data,'E08000032',1)
-    summary_df.to_csv(os.path.join('tests','data','comparison_detailed_df.csv'))
+    summary_df_sum, summary_df_last  = compare_detailed_estimates(simulation_data,ONS_data,'E08000032',1)
+    summary_df_sum.to_csv(os.path.join('tests','data','comparison_detailed_df.csv'))
+    summary_df_last.to_csv(os.path.join('tests','data','comparison_detailed_df_last_year.csv'))
 
-    assert (summary_df.shape[0]>1)
+    assert (summary_df_sum.shape[0]>1)
+    assert (summary_df_last.shape[0]>1)
 
 def test_run_pipeline():
 
