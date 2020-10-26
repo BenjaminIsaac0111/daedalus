@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import pandas as pd
 import os
+from daedalus.utils import get_age_bucket
 
 def compare_summary_estimates(simulation_data, ONS_data, location, n_years, detailed = False):
     '''Function that compares the outputs of the simulation with the estimates from
@@ -18,6 +19,8 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years, deta
     detailed: bool
         If this function is being used for a age, gender detailed comparison
     '''
+    import numpy as np
+    np.seterr(divide='ignore', invalid='ignore')
 
     starting_year = 2011
 
@@ -38,12 +41,12 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years, deta
         count = 0
         for y in years:
             column_name = col + "_" + str(y)
-            count = count + ONS_data_LAD[column_name].values[0]
+            count = count + ONS_data_LAD[column_name].sum()
 
         total_values["ONS_total_"+col] = count
 
     if detailed==False:
-        total_values["ONS_total_population"] = ONS_data_LAD["population""_" + str(starting_year + n_years)].values[0]
+        total_values["ONS_total_population"] = ONS_data_LAD["population_" + str(starting_year + n_years)].sum()
 
     # print some summary stats on the simulation
     total_values["simulation_population"] = len(simulation_data[simulation_data['alive'] == 'alive'])
@@ -54,9 +57,11 @@ def compare_summary_estimates(simulation_data, ONS_data, location, n_years, deta
     total_values["simulation_births"] = len(simulation_data[simulation_data['parent_id']  != -1])
 
     for col in columns:
+        print (col)
+        print (total_values["simulation_"+col] , total_values["ONS_total_"+col])
         total_values["ONS_simulation_"+col+"_diff"] = total_values["simulation_"+col] - total_values["ONS_total_"+col]
         total_values["ONS_simulation_"+col+"_diff_%"] = \
-            (total_values["simulation_"+col+""] - total_values["ONS_total_"+col])/total_values["ONS_total_"+col+""]*100
+            (total_values["simulation_"+col] - total_values["ONS_total_"+col])/float(total_values["ONS_total_"+col])*100
 
         print (col, "simulation: ", total_values["simulation_"+col],", ONS estimation ", total_values["ONS_total_"+col])
         print (col, "diff: ", round(total_values["ONS_simulation_"+col+"_diff"],2),"(",round(total_values["ONS_simulation_"+col+"_diff_%"],1),"%)")
@@ -80,6 +85,13 @@ def compare_detailed_estimates(simulation_data, ONS_data, location, n_years):
     '''
 
     ONS_data = ONS_data[ONS_data['ladcode20'] == location]
+    try:
+        age_bucket = simulation_data['age_bucket']
+    except:
+        simulation_data = get_age_bucket(simulation_data)
+        age_bucket = simulation_data['age_bucket']
+        ONS_data = get_age_bucket(ONS_data)
+
 
     df_list = []
     for sex in [1,2]:
@@ -87,16 +99,16 @@ def compare_detailed_estimates(simulation_data, ONS_data, location, n_years):
         simulation_data_sex = simulation_data[simulation_data['sex']==sex]
         ONS_data_sex = ONS_data[ONS_data['sex']==sex]
 
-        for age in range (0,90):
+        for age in age_bucket:
 
-            simulation_data_sex_age = simulation_data_sex[
-                    (simulation_data_sex['age'] >= age) & (simulation_data_sex['age'] < age + n_years)]
+            simulation_data_sex_age = simulation_data_sex[simulation_data_sex['age_bucket'] == age]
+            ONS_data_sex_age = ONS_data_sex[ONS_data_sex['age_bucket'] == age]
 
-            ONS_data_sex_age = ONS_data_sex[ONS_data_sex['age'] == age]
-
+            print (age)
+            print (sex)
             df = compare_summary_estimates(simulation_data_sex_age, ONS_data_sex_age, location, n_years, True)
-            df['age_start'] = age
-            df['age_end'] = age+n_years
+            df['age_start'] = simulation_data_sex_age['age'].min()
+            df['age_end'] = simulation_data_sex_age['age'].max()
             df['sex'] = sex
 
             df_list.append(df)
