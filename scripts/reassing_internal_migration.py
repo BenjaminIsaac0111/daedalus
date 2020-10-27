@@ -24,7 +24,7 @@ def reassing_internal_migration_to_LAD(location, input_path, list_pop_locations_
 
     # for each year run the reassigment
     for year_dir in list_pop_dir:
-        print ('Reassign for :', year_dir)
+        print ('Reassign for ', year_dir)
 
         simulation_data = pd.read_csv(os.path.join(input_location_path, year_dir,
                                                    'ssm_' + location + '_MSOA11_ppp_2011_simulation_' + year_dir + '.csv'))
@@ -54,20 +54,25 @@ def reassing_internal_migration_to_LAD(location, input_path, list_pop_locations_
     # run comparison for the total simmulation
     final_file = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'
 
-    simulation_data = pd.read_csv(os.path.join(input_location_path, final_file),low_memory=False)
+    simulation_data_full = pd.read_csv(os.path.join(input_location_path, final_file),low_memory=False)
 
     print('Reassign full dataset ')
     for loc in list_pop_locations_dir:
-        data_location_simulation = pd.read_csv(os.path.join(input_path, loc,
+        data_location_simulation_full = pd.read_csv(os.path.join(input_path, loc,
                                                             'ssm_' + loc + '_MSOA11_ppp_2011_simulation.csv'))
 
-        data_location_simulation = data_location_simulation[data_location_simulation['location'] == location]
-        data_location_simulation['duplicate'] = True
-        data_location_simulation['internal_migration_in'] = 'Yes'
+        data_location_simulation_full = data_location_simulation_full[data_location_simulation_full['location'] == location]
 
-        simulation_data = pd.concat([simulation_data, data_location_simulation])
+        if data_location_simulation_full.shape[0] > 0:
 
-    simulation_data.to_csv(os.path.join(input_location_path,
+            print('Reassign ', data_location_simulation_full.shape[0], ' individuals that migrated from ', loc, ' to ', location)
+
+            data_location_simulation_full['duplicate'] = True
+            data_location_simulation_full['internal_migration_in'] = 'Yes'
+
+            simulation_data_full = pd.concat([simulation_data_full, data_location_simulation_full])
+
+    simulation_data_full.to_csv(os.path.join(input_location_path,
                                         final_file+'_reassigned.csv'))
 
 
