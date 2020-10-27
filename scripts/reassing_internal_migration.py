@@ -4,8 +4,8 @@ import pandas as pd
 import argparse
 
 
-def reassing_internal_migration(location, input_path, list_pop_locations_dir):
-    """ Function that run the ONS-Simmulation comparisons for a given location
+def reassing_internal_migration_to_LAD(location, input_path, list_pop_locations_dir):
+    """ Function that finds all the individuals that internally migrated into a given location
 
     Parameters
     ----------
@@ -22,8 +22,9 @@ def reassing_internal_migration(location, input_path, list_pop_locations_dir):
     # path to the simulation files
     list_pop_dir = [i for i in os.listdir(input_location_path) if i.startswith('year_')]
 
-    # for each year run the comparisons
+    # for each year run the reassigment
     for year_dir in list_pop_dir:
+        print ('Reassign for :', year_dir)
 
         simulation_data = pd.read_csv(os.path.join(input_location_path, year_dir,
                                                    'ssm_' + location + '_MSOA11_ppp_2011_simulation_' + year_dir + '.csv'))
@@ -31,6 +32,7 @@ def reassing_internal_migration(location, input_path, list_pop_locations_dir):
         simulation_data['duplicate'] = False
         simulation_data['internal_migration_in'] = 'No'
 
+        # look in each location finding the individuals that migrated
         for loc in list_pop_locations_dir:
             if loc==location:
                 continue
@@ -52,8 +54,9 @@ def reassing_internal_migration(location, input_path, list_pop_locations_dir):
     # run comparison for the total simmulation
     final_file = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'
 
-    simulation_data = pd.read_csv(os.path.join(input_location_path, final_file))
+    simulation_data = pd.read_csv(os.path.join(input_location_path, final_file),low_memory=False)
 
+    print('Reassign full dataset ')
     for loc in list_pop_locations_dir:
         data_location_simulation = pd.read_csv(os.path.join(input_path, loc,
                                                             'ssm_' + loc + '_MSOA11_ppp_2011_simulation.csv'))
@@ -64,13 +67,13 @@ def reassing_internal_migration(location, input_path, list_pop_locations_dir):
 
         simulation_data = pd.concat([simulation_data, data_location_simulation])
 
-    simulation_data.to_csv(os.path.join(input_location_path, year_dir,
-                                        'ssm_' + location + '_MSOA11_ppp_2011_simulation_reassigned.csv'))
+    simulation_data.to_csv(os.path.join(input_location_path,
+                                        final_file+'_reassigned.csv'))
 
 
-def run_all_validations(input_data_dir):
+def reassing_all(input_data_dir):
     """
-    Run validation comparison in all existing locations present in an input directory
+    Run reassigment in all existing locations present in an input directory
 
     input_data_dir : string
         Input data path where the outputs of all simulations are found
@@ -79,8 +82,9 @@ def run_all_validations(input_data_dir):
     list_pop_locations_dir = [i for i in os.listdir(input_data_dir) if i.startswith('E')]
 
     for location in list_pop_locations_dir:
+        print ()
         print('Running re-assigment for: ', location)
-        reassing_internal_migration(location, input_data_dir, list_pop_locations_dir)
+        reassing_internal_migration_to_LAD(location, input_data_dir, list_pop_locations_dir)
 
 
 if __name__ == "__main__":
@@ -93,6 +97,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     if args.location:
         list_pop_locations_dir = [i for i in os.listdir(args.input_data_dir) if i.startswith('E')]
-        reassing_internal_migration(args.location, args.input_data_dir, list_pop_locations_dir)
+        reassing_internal_migration_to_LAD(args.location, args.input_data_dir, list_pop_locations_dir)
     else:
-        run_all_validations(args.input_data_dir)
+        reassing_all(args.input_data_dir)
