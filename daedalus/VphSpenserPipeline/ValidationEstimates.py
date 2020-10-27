@@ -107,9 +107,6 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
             (total_values["simulation_"+col] - total_values["ONS_total_"+col])/float(total_values["ONS_total_"+col])*100
 
         # print some of the values and its comparisons
-        print(col)
-        print(total_values["simulation_" + col], total_values["ONS_total_" + col])
-
         print (col, "simulation: ", total_values["simulation_"+col],", ONS estimation ", total_values["ONS_total_"+col])
         print (col, "diff: ", round(total_values["ONS_simulation_"+col+"_diff"],2),"(",round(total_values["ONS_simulation_"+col+"_diff_%"],1),"%)")
         print ()
