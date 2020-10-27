@@ -58,6 +58,8 @@ def reassing_internal_migration_to_LAD(location, input_path, list_pop_locations_
 
     print('Reassign full dataset ')
     for loc in list_pop_locations_dir:
+        if loc == location:
+            continue
         data_location_simulation_full = pd.read_csv(os.path.join(input_path, loc,
                                                             'ssm_' + loc + '_MSOA11_ppp_2011_simulation.csv'))
 
