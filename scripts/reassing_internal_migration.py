@@ -2,6 +2,13 @@
 import os
 import pandas as pd
 import argparse
+pd.options.mode.chained_assignment = None
+
+columns_dtypes = {'tracked': 'bool', 'immigrated': 'str', 'emigrated': 'str', 'cause_of_death': 'str',
+          'years_of_life_lost': 'float64', 'previous_MSOA_locations': 'str', 'internal_outmigration': 'str',
+          'last_outmigration_time': 'str', 'previous_LAD_locations': 'str', 'ethnicity': 'str', 'age': 'float64',
+          'MSOA': 'str', 'alive': 'str', 'sex': 'float64', 'location': 'str', 'exit_time': 'str',
+          'entrance_time': 'str', 'parent_id': 'int64', 'last_birth_time': 'str', 'age_bucket': 'str'}
 
 
 def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
@@ -27,10 +34,10 @@ def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
         print ('Reassign for ', year_dir)
 
         simulation_data = pd.read_csv(os.path.join(input_location_path, year_dir,
-                                                   'ssm_' + location + '_MSOA11_ppp_2011_simulation_' + year_dir + '.csv'))
+                                                   'ssm_' + location + '_MSOA11_ppp_2011_simulation_' + year_dir + '.csv'), dtype=columns_dtypes)
 
-        simulation_data['duplicate'] = False
-        simulation_data['internal_migration_in'] = 'No'
+        simulation_data.loc[:,'duplicate'] = False
+        simulation_data.loc[:,'internal_migration_in'] = 'No'
 
 
         data_location_simulation = pool_migrants[year_dir]
@@ -39,8 +46,8 @@ def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
 
         if data_location_simulation.shape[0]>0:
             print ('Reassign ',data_location_simulation.shape[0],' individuals that migrated to ',location)
-            data_location_simulation['duplicate'] = True
-            data_location_simulation['internal_migration_in'] = 'Yes'
+            data_location_simulation.loc[:,'duplicate'] = True
+            data_location_simulation.loc[:,'internal_migration_in'] = 'Yes'
 
             simulation_data = pd.concat([simulation_data,data_location_simulation])
 
@@ -51,7 +58,7 @@ def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
     final_file = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'
 
     simulation_data_full = pd.read_csv(os.path.join(input_location_path,
-                                                   'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'))
+                                                   'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'), dtype=columns_dtypes)
 
     data_location_simulation_full = pool_migrants['full']
 
@@ -61,8 +68,8 @@ def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
         print ('Full dataset')
         print('Reassign ', data_location_simulation_full.shape[0], ' individuals that migrated from  to ', location)
 
-        data_location_simulation_full['duplicate'] = True
-        data_location_simulation_full['internal_migration_in'] = 'Yes'
+        data_location_simulation_full.loc[:,'duplicate'] = True
+        data_location_simulation_full.loc[:,'internal_migration_in'] = 'Yes'
 
         simulation_data_full = pd.concat([simulation_data_full, data_location_simulation_full])
 
@@ -125,27 +132,21 @@ def get_migrants(input_path, list_pop_locations_dir):
         for loc in list_pop_locations_dir:
 
             data_location_simulation = pd.read_csv(os.path.join(input_path, loc, year_dir,
-                                                                'ssm_' + loc + '_MSOA11_ppp_2011_simulation_' + year_dir + '.csv'))
+                                                                'ssm_' + loc + '_MSOA11_ppp_2011_simulation_' + year_dir + '.csv'), dtype=columns_dtypes)
 
             data_location_simulation_int_migrants = data_location_simulation[data_location_simulation['location'] != loc]
 
             if data_location_simulation_int_migrants.shape[0]>0:
-                print ('Found ',data_location_simulation.shape[0],' individuals that migrated' )
-                data_location_simulation_int_migrants['duplicate'] = True
-                data_location_simulation_int_migrants['internal_migration_in'] = 'Yes'
-
+                print ('Found ',data_location_simulation_int_migrants.shape[0],' individuals that migrated' )
                 migrant_data = pd.concat([migrant_data,data_location_simulation_int_migrants])
 
             if year_dir == list_pop_dir[-1]:
                 data_location_simulation_full = pd.read_csv(os.path.join(input_path, loc,
-                                                                         'ssm_' + loc + '_MSOA11_ppp_2011_simulation.csv'))
+                                                                         'ssm_' + loc + '_MSOA11_ppp_2011_simulation.csv'), dtype=columns_dtypes)
 
                 data_location_simulation_full_migrants = data_location_simulation_full[data_location_simulation_full['location'] != loc]
                 if data_location_simulation_full_migrants.shape[0] > 0:
                     print('Found ', data_location_simulation_full_migrants.shape[0], ' individuals that migrated')
-                    data_location_simulation_full_migrants['duplicate'] = True
-                    data_location_simulation_full_migrants['internal_migration_in'] = 'Yes'
-
                     full_migrant_data = pd.concat([full_migrant_data, data_location_simulation_full_migrants])
 
         dict_migrants[year_dir] = migrant_data
