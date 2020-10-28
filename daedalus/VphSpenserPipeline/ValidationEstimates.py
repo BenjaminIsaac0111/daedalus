@@ -5,7 +5,7 @@ import datetime
 import os
 from daedalus.utils import get_age_bucket
 
-def compare_estimates(simulation_data, ONS_data, location, n_years, previous_year_comparison = False):
+def compare_estimates(simulation_data, ONS_data, location, n_years, previous_year_comparison = False, starting_year = 2011):
     '''Function that compares the outputs of the simulation with the estimates from
     the ONS. Total values are compared.
  Parameters
@@ -20,6 +20,8 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
         Number of years the simulation was ran for
     previous_year_comparison: bool
         In case we only want to compare the last year data
+    starting_year: int
+        Starting year of the simulation
     Returns:
         A dataframe with the comparison between the ONS and simulation data
 
@@ -28,9 +30,6 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
 
     #allow division by 0
     np.seterr(divide='ignore', invalid='ignore')
-
-    # harcoded starting point
-    starting_year = 2011
 
 
     # select data from the input location
@@ -94,10 +93,11 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
     total_values["simulation_deaths"] = len(simulation_data[(simulation_data['alive'] == 'dead') & (simulation_data['exit_time']>min_time) & (simulation_data['exit_time']<=max_time)])
     total_values["simulation_international_out"] = len(simulation_data[(simulation_data['alive'] == 'emigrated') & (simulation_data['exit_time']>min_time) & (simulation_data['exit_time']<=max_time)])
     total_values["simulation_international_in"] = len(simulation_data[(simulation_data['immigrated'].astype(str) == 'Yes') & (simulation_data['entrance_time']>min_time) & (simulation_data['entrance_time']<=max_time)])
+    # TODO: Use sample with all simulation (not just that LAD as in line 23)
     total_values["simulation_internal_out"] = len(simulation_data[(simulation_data['internal_outmigration'] == 'Yes') & (simulation_data['last_outmigration_time']>min_time) & (simulation_data['last_outmigration_time']<=max_time)])
     total_values["simulation_births"] = len(simulation_data[(simulation_data['parent_id']  != -1) & (simulation_data['entrance_time']>min_time) & (simulation_data['entrance_time']<=max_time)])
 
-    # we still don't have implemented the internal immigration into a given location, this will change once this happens
+    # TODO: we still don't have implemented the internal immigration into a given location, this will change once this happens
     total_values["simulation_internal_in"] = 0 #len(simulation_data[simulation_data['internal_immigration'] == 'Yes'])
 
     for col in columns:
