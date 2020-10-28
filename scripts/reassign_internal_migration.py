@@ -2,6 +2,7 @@
 import os
 import pandas as pd
 import argparse
+from glob import glob
 pd.options.mode.chained_assignment = None
 
 columns_dtypes = {'tracked': 'bool', 'immigrated': 'str', 'emigrated': 'str', 'cause_of_death': 'str',
@@ -11,7 +12,7 @@ columns_dtypes = {'tracked': 'bool', 'immigrated': 'str', 'emigrated': 'str', 'c
           'entrance_time': 'str', 'parent_id': 'int64', 'last_birth_time': 'str', 'age_bucket': 'str'}
 
 
-def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
+def reassign_internal_migration_to_LAD(location, input_path, pool_migrants):
     """ Function that finds all the individuals that internally migrated into a given location
 
     Parameters
@@ -77,7 +78,7 @@ def reassing_internal_migration_to_LAD(location, input_path, pool_migrants):
                                         final_file+'_reassigned.csv'))
 
 
-def reassing_all(input_data_dir):
+def reassign_all(input_data_dir, startswith = 'E'):
     """
     Run reassigment in all existing locations present in an input directory
 
@@ -85,19 +86,24 @@ def reassing_all(input_data_dir):
     ----------
     input_data_dir : string
         Input data path where the outputs of all simulations are found
+    startswith: string
+        Prefix after the directory to be used
+
     Returns:
     ----------
         A dictionary of dataframes with the pool of migrants for each year.
     """
 
-    list_pop_locations_dir = [i for i in os.listdir(input_data_dir) if i.startswith('E')]
+    # TODO: Change to glob
+    list_pop_locations_dir = [i for i in os.listdir(input_data_dir) if i.startswith(startswith)]
+
 
     pool_migrants = get_migrants(input_data_dir, list_pop_locations_dir)
 
     for location in list_pop_locations_dir:
         print ()
         print('Running re-assigment for: ', location)
-        reassing_internal_migration_to_LAD(location, input_data_dir, pool_migrants)
+        reassign_internal_migration_to_LAD(location, input_data_dir, pool_migrants)
 
 
 def get_migrants(input_path, list_pop_locations_dir):
@@ -170,6 +176,6 @@ if __name__ == "__main__":
     if args.location:
         list_pop_locations_dir = [i for i in os.listdir(args.input_data_dir) if i.startswith('E')]
         pool_migrants = get_migrants(args.input_data_dir, list_pop_locations_dir)
-        reassing_internal_migration_to_LAD(args.location, args.input_data_dir, pool_migrants)
+        reassign_internal_migration_to_LAD(args.location, args.input_data_dir, pool_migrants)
     else:
-        reassing_all(args.input_data_dir)
+        reassign_all(args.input_data_dir)
