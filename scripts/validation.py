@@ -3,7 +3,7 @@ import os
 import pandas as pd
 import argparse
 from daedalus.VphSpenserPipeline.ValidationEstimates import compare_estimates, compare_detailed_estimates
-
+from daedalus.VphSpenserPipeline.ReassingMigrants import get_migrants, reassign_internal_migration_to_LAD
 
 def run_validation(location, input_location_path, persistent_data_dir):
     """ Function that run the ONS-Simmulation comparisons for a given location
@@ -33,7 +33,7 @@ def run_validation(location, input_location_path, persistent_data_dir):
     for year_dir in list_pop_dir:
 
         year = int(list(year_dir)[-1])
-        simulation_data = pd.read_csv(os.path.join(input_location_path, year_dir,'ssm_'+location+'_MSOA11_ppp_2011_simulation_'+year_dir+'.csv'))
+        simulation_data = pd.read_csv(os.path.join(input_location_path, year_dir,'ssm_'+location+'_MSOA11_ppp_2011_simulation_'+year_dir+'_reassigned.csv'))
 
         summary_df_sum = compare_estimates(simulation_data, ONS_summary_data, location, year)
         summary_df_sum_detailed, summary_df_last_detailed = compare_detailed_estimates(simulation_data, ONS_detailed_data, location, year)
@@ -46,7 +46,7 @@ def run_validation(location, input_location_path, persistent_data_dir):
 
 
     # run comparison for the total simmulation
-    final_file = 'ssm_'+location+'_MSOA11_ppp_2011_simulation.csv'
+    final_file = 'ssm_'+location+'_MSOA11_ppp_2011_simulation_reassigned.csv'
 
     # get the number of years that the simulatio ran for (should be the same at the highest values for the year subdirectories)
     total_year = [int(list(y)[-1]) for y in list_pop_dir]
@@ -80,15 +80,31 @@ def run_all_validations(input_data_dir, persistent_data_dir):
 
     list_pop_locations_dir = [i for i in os.listdir(input_data_dir) if i.startswith('E')]
 
-    for location in list_pop_locations_dir:
+    print ('-------------------------------------------------------------')
+    print ('Getting pool of individuals that migrated internally between LADs')
+    print ('-------------------------------------------------------------')
+    print()
 
+    pool_migrants = get_migrants(input_data_dir, list_pop_locations_dir)
+
+    for location in list_pop_locations_dir:
+        print('----------------------------------------------')
+        print('Re-assigning inviduals that migrated to ',location)
+        print('----------------------------------------------')
+        print()
+        reassign_internal_migration_to_LAD(location, input_data_dir, pool_migrants)
+
+        print('-----------------------------------')
         print ('Running validation for: ',location)
+        print('-----------------------------------')
+        print ()
+
         run_validation(location,os.path.join(input_data_dir,location),persistent_data_dir)
 
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description="Dynamic Microsimulation")
+    parser = argparse.ArgumentParser(description="Validation of the dynamic microsimulation")
 
     parser.add_argument('--input_data_dir', help='directory where the input data is', default=None)
     parser.add_argument('--persistent_data_dir', help='directory where the persistent data is', default=None)
@@ -96,8 +112,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     if args.location:
-
+        # if location is given as an input, then only run validation in that location
         run_validation(args.location, os.path.join(args.input_data_dir,args.location), args.persistent_data_dir)
     else:
+        # if no location is given as an input, then run validation in all locations in that path
+
         run_all_validations(args.input_data_dir, args.persistent_data_dir)
 

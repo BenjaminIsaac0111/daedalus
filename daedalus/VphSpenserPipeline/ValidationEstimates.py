@@ -10,7 +10,7 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
     the ONS. Total values are compared.
  Parameters
     ----------
-    simulation_data : Dataframe
+    simulation_data_LAD : Dataframe
         Input data from the VPH simulation
     ONS_data : Dataframe
         Summary estimates from the ONS existing in the persistent data
@@ -31,10 +31,14 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
     #allow division by 0
     np.seterr(divide='ignore', invalid='ignore')
 
+    # make sure the variables are a datetime object for easier manipulation
+    simulation_data['entrance_time'] = pd.to_datetime(simulation_data['entrance_time'], format="%Y-%m-%d %H:%M:%S")
+    simulation_data['exit_time'] = pd.to_datetime(simulation_data['exit_time'], format="%Y-%m-%d %H:%M:%S")
+    simulation_data['last_outmigration_time'] = pd.to_datetime(simulation_data['last_outmigration_time'], format="%Y-%m-%d %H:%M:%S")
 
     # select data from the input location
     ONS_data_LAD = ONS_data[ONS_data['ladcode20'] == location]
-    simulation_data = simulation_data[simulation_data['location'] == location]
+    simulation_data_LAD = simulation_data[simulation_data['location'] == location]
 
     # columns from the ONS_data that we are interested about
     columns = ['population','births','deaths','internal_in' ,'internal_out',  'international_in',
@@ -43,14 +47,9 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
     # list of years to compare
     years = [(starting_year+year) for year in range(1, n_years + 1)]
 
-    # make sure the variables are a datetime object for easier manipulation
-    simulation_data['entrance_time'] = pd.to_datetime(simulation_data['entrance_time'], format="%Y-%m-%d %H:%M:%S")
-    simulation_data['exit_time'] = pd.to_datetime(simulation_data['exit_time'], format="%Y-%m-%d %H:%M:%S")
-    simulation_data['last_outmigration_time'] = pd.to_datetime(simulation_data['last_outmigration_time'], format="%Y-%m-%d %H:%M:%S")
-
     # using data get the starting  and finishing time (min and max time)
-    min_time = simulation_data['entrance_time'].min()
-    total_max_time = simulation_data['entrance_time'].max()
+    min_time = simulation_data_LAD['entrance_time'].min()
+    total_max_time = simulation_data_LAD['entrance_time'].max()
 
     # calculate the max time base on adding the number of years the simulation run
     max_time = min_time + datetime.timedelta(days=365.25*n_years)
@@ -89,16 +88,13 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
 
 
     # get the summary stats from the simulation in a selected time perios
-    total_values["simulation_population"] = len(simulation_data[simulation_data['alive'] == 'alive'])
-    total_values["simulation_deaths"] = len(simulation_data[(simulation_data['alive'] == 'dead') & (simulation_data['exit_time']>min_time) & (simulation_data['exit_time']<=max_time)])
-    total_values["simulation_international_out"] = len(simulation_data[(simulation_data['alive'] == 'emigrated') & (simulation_data['exit_time']>min_time) & (simulation_data['exit_time']<=max_time)])
-    total_values["simulation_international_in"] = len(simulation_data[(simulation_data['immigrated'].astype(str) == 'Yes') & (simulation_data['entrance_time']>min_time) & (simulation_data['entrance_time']<=max_time)])
-    # TODO: Use sample with all simulation (not just that LAD as in line 23)
-    total_values["simulation_internal_out"] = len(simulation_data[(simulation_data['internal_outmigration'] == 'Yes') & (simulation_data['last_outmigration_time']>min_time) & (simulation_data['last_outmigration_time']<=max_time)])
-    total_values["simulation_births"] = len(simulation_data[(simulation_data['parent_id']  != -1) & (simulation_data['entrance_time']>min_time) & (simulation_data['entrance_time']<=max_time)])
-
-    # TODO: we still don't have implemented the internal immigration into a given location, this will change once this happens
-    total_values["simulation_internal_in"] = 0 #len(simulation_data[simulation_data['internal_immigration'] == 'Yes'])
+    total_values["simulation_population"] = len(simulation_data_LAD[simulation_data_LAD['alive'] == 'alive'])
+    total_values["simulation_deaths"] = len(simulation_data_LAD[(simulation_data_LAD['alive'] == 'dead') & (simulation_data_LAD['exit_time'] > min_time) & (simulation_data_LAD['exit_time'] <= max_time)])
+    total_values["simulation_international_out"] = len(simulation_data_LAD[(simulation_data_LAD['alive'] == 'emigrated') & (simulation_data_LAD['exit_time'] > min_time) & (simulation_data_LAD['exit_time'] <= max_time)])
+    total_values["simulation_international_in"] = len(simulation_data_LAD[(simulation_data_LAD['immigrated'].astype(str) == 'Yes') & (simulation_data_LAD['entrance_time'] > min_time) & (simulation_data_LAD['entrance_time'] <= max_time)])
+    total_values["simulation_internal_out"] = len(simulation_data[(simulation_data['internal_outmigration'] == 'Yes') & (simulation_data['last_outmigration_time'] > min_time) & (simulation_data['last_outmigration_time'] <= max_time)])
+    total_values["simulation_births"] = len(simulation_data_LAD[(simulation_data_LAD['parent_id'] != -1) & (simulation_data_LAD['entrance_time'] > min_time) & (simulation_data_LAD['entrance_time'] <= max_time)])
+    total_values["simulation_internal_in"] = len(simulation_data_LAD[simulation_data_LAD['internal_migration_in'] == 'Yes'])
 
     for col in columns:
         # get difference (absolute values and %) between ONS and simulation
@@ -112,9 +108,9 @@ def compare_estimates(simulation_data, ONS_data, location, n_years, previous_yea
         print ()
 
     # add the age range and sex in the input simulation sample
-    total_values['age_start'] = simulation_data['age'].min()
-    total_values['age_end'] = simulation_data['age'].max()
-    total_values['sex'] = np.unique(simulation_data['sex'])
+    total_values['age_start'] = simulation_data_LAD['age'].min()
+    total_values['age_end'] = simulation_data_LAD['age'].max()
+    total_values['sex'] = np.unique(simulation_data_LAD['sex'])
 
     return pd.DataFrame.from_dict([total_values])
 
@@ -137,7 +133,6 @@ def compare_detailed_estimates(simulation_data, ONS_data, location, n_years):
 
     # select data from the input location
     ONS_data = ONS_data[ONS_data['ladcode20'] == location]
-    simulation_data = simulation_data[simulation_data['location'] == location]
 
     # in case the data doesn't have it, turn age into an age bucket for agregation
     age_bucket = ["0to15", "16to19", "20to24", "25to29", "30to44", "45to59", "60to74", "75plus"]
