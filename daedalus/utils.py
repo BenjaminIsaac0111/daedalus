@@ -260,6 +260,11 @@ def prepare_dataset(dataset_path="../daedalus/persistent_data/ssm_E08000032_MSOA
                                   lookup['Rate to use (from NewEthpop outputs) Code']))
         dataset.replace({"ethnicity": code_ethnicity}, inplace=True)
     if location_code:
+        if location_code == 'E09000001' or location_code == 'E09000033':
+            location_code = 'E09000001+E09000033'
+        if location_code == 'E06000052' or location_code == 'E06000053':
+            location_code = 'E06000052+E06000053'
+
         dataset['MSOA'] = dataset['location']
         dataset['location'] = location_code
     else:
