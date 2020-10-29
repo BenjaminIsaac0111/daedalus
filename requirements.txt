@@ -10,6 +10,6 @@ numpy~=1.19.1
 #ukpopulation~=1.2.1
 setuptools~=49.2.0
 matplotlib~=3.2.2
-vivarium_public_health @ git+https://github.com/alan-turing-institute/vivarium_public_health_spenser.git@develop#egg=vivarium_public_health_spenser
+vivarium_population_spenser @ git+https://github.com/alan-turing-institute/vivarium_population_spenser@develop#egg=vivarium_population_spenser
 distutils_pytest
 

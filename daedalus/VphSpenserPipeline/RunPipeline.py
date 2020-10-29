@@ -5,12 +5,12 @@ import daedalus.utils as utils
 from pathlib import Path
 import os
 from vivarium import InteractiveContext
-from vivarium_public_health.population.spenser_population import TestPopulation
-from vivarium_public_health.population import FertilityAgeSpecificRates
-from vivarium_public_health.population import Mortality
-from vivarium_public_health.population import Emigration
-from vivarium_public_health.population import ImmigrationDeterministic as Immigration
-from vivarium_public_health.population import InternalMigration
+from vivarium_population_spenser.population.spenser_population import TestPopulation
+from vivarium_population_spenser.population import FertilityAgeSpecificRates
+from vivarium_population_spenser.population import Mortality
+from vivarium_population_spenser.population import Emigration
+from vivarium_population_spenser.population import ImmigrationDeterministic as Immigration
+from vivarium_population_spenser.population import InternalMigration
 
 from daedalus.RateTables.EmigrationRateTable import EmigrationRateTable
 from daedalus.RateTables.MortalityRateTable import MortalityRateTable

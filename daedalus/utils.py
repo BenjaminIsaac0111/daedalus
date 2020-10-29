@@ -26,7 +26,7 @@ def get_config(config):
 def base_plugins():
     config = {'required': {
                   'data': {
-                      'controller': 'vivarium_public_health.testing.mock_artifact.MockArtifactManager',
+                      'controller': 'vivarium_population_spenser.testing.mock_artifact.MockArtifactManager',
                       'builder_interface': 'vivarium.framework.artifact.ArtifactInterface'
                   }
              }
