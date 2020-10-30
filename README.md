@@ -28,7 +28,7 @@ Table of contents
 - [Tutorials](#tutorials)
     * [Run Daedalus via command line](#run-daedalus-via-command-line)
     * [Speeding up simulations over several LADs by parallelization](#speeding-up-simulations-over-several-lads-by-parallelization)
-    * [Evaluate the results](#evaluate-the-results)
+    * [Evaluation](#evaluation)
     * [Preparing datasets](#preparing-datasets)
     * [Configuration file](#configuration-file)
 
@@ -117,7 +117,17 @@ refer to [section: Preparing datasets](#preparing-datasets) for details.
 
 As an example, when running the above command, *Daedalus* store the results in the following directory structure:
 
-XXX
+```bash
+output
+└── E08000032
+    ├── config_file_E08000032.yml
+    ├── ssm_E08000032_MSOA11_ppp_2011_processed.csv
+    ├── ssm_E08000032_MSOA11_ppp_2011_simulation.csv
+    ├── year_1
+    │   └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_1.csv
+    └── year_2
+        └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_2.csv
+```
 
 with the following messages on the terminal:
 
@@ -204,7 +214,7 @@ The following command displays all available options:
 python scripts/parallel_run.py --help
 ```
 
-## Evaluate and plot the results
+## Evaluation 
 
 After running the simulation in [section: Run Daedalus via command line](#run-daedalus-via-command-line), 
 the results are stored in a directory specified by `--output_dir`, e.g., `output` in the command above.
