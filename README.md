@@ -263,3 +263,65 @@ https://scitools.org.uk/cartopy/docs/latest/installing.html
 <p align="center">
 <img src="./figs/fig3.png" width="50%">
 </p>
+
+
+XXXXXXX
+
+The way to run the reassigment-validation is with this command line:
+
+`python scripts/validation.py --input_data_dir output --persistent_data_dir persistent_data`
+
+in here `output` is where all the simulated files are and `persistent_data` is where the following ONS files are:
+
+- MYEB2_detailed_components_of_change_series_EW_(2019_geog20).csv 
+- MYEB3_summary_components_of_change_series_UK_(2019_geog20).csv
+
+For this to work, is important that the simulation files have the yearly structure, e.g:
+
+```bash
+output
+└── E08000032
+    ├── config_file_E08000032.yml
+    ├── ssm_E08000032_MSOA11_ppp_2011_processed.csv
+    └── ssm_E08000032_MSOA11_ppp_2011_simulation.csv
+    └── year_1
+          └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_1.csv
+    └── year_2
+          └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_2.csv
+ 
+```
+
+Probably the best strategy to make sure everything works ok is to run the step one of the pipeline (the simulation) 
+for a few LADs and then run the validation on those outputs. Let me know if you have any questions/comments.
+
+## Configuration file
+
+XXX
+
+## Preparing datasets
+
+XXX
+
+## Warning ⚠️
+
+If you are planning to run the microsimulation pipeline on the LADs 
+'E09000001', 'E09000033',  'E06000052' and 'E06000053' beware that these are not treated independently 
+on the rates as the rest of LADs. They are merged together in the following way: 
+
+- 'E09000001+E09000033'
+- 'E06000052+E06000053'
+
+You should be able to run on the single LAD files independently, 
+but beware that the pipeline will be using the rates and total immigrated values for those LADs combined. 
+The most appropriate way to deal with this is to run the microsimulation from a combined LAD starting file, 
+instead of individually. 
+
+E.g for the LADs E09000001 and E09000033:
+
+1. Create a file named: `ssm_E09000001+E09000033_MSOA11_ppp_2011.csv` that contains 
+the starting population from both E09000001 and E09000033.
+2. Run the pipeline in the following way:
+`python scripts/run.py -c config/default_config.yaml --location E09000001+E09000033 --input_data_dir data --persistent_data_dir persistent_data --output_dir output`
+
+The equivalent should be done for 'E06000052' and 'E06000053' LADs.
+
