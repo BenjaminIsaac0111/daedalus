@@ -3,9 +3,9 @@
 </div>
  
 <p align="center">
-    <a href="https://zenodo.org/badge/latestdoi/232834194">
+    <!--- <a href="https://zenodo.org/badge/latestdoi/232834194">
         <img alt="DOI" src="https://zenodo.org/badge/232834194.svg">
-    </a>
+    </a> --->
     <a href="https://github.com/BenjaminIsaac0111/daedalus/blob/master/LICENSE">
         <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
     </a>
