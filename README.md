@@ -278,7 +278,7 @@ python scripts/validation.py --help
 Next, we plot the results in this [notebook](notebooks/pipeline_plot_results.ipynb).
 
 <p align="center">
-<img src="./figs/fig1.png" width="70%">
+<img src="./figs/fig1.png" width="100%">
 </p>
 
 In another [notebook](notebooks/pipeline_plot_results_maps.ipynb),
@@ -289,11 +289,11 @@ We use the `cartopy` library to plot maps in this notebook.
 https://scitools.org.uk/cartopy/docs/latest/installing.html
 
 <p align="center">
-<img src="./figs/fig2.png" width="50%">
+<img src="./figs/fig2.png" width="70%">
 </p>
 
 <p align="center">
-<img src="./figs/fig3.png" width="50%">
+<img src="./figs/fig3.png" width="70%">
 </p>
 
 ## Preparing datasets
