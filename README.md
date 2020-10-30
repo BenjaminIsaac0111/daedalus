@@ -188,44 +188,30 @@ python scripts/parallel_run.py --help
 ## Evaluate and plot the results
 
 After running the simulation in [section: Run Daedalus via command line](#run-daedalus-via-command-line), 
-an `output` directory is created (specified by `--output_dir` argument). 
+the results are stored in a directory as specified by `--output_dir`, e.g., `output` in the command above.
 In our example, it contains the following files:
 
 ```bash
-output
-└── E08000032
-    ├── config_file_E08000032.yml
-    ├── ssm_E08000032_MSOA11_ppp_2011_processed.csv
-    └── ssm_E08000032_MSOA11_ppp_2011_simulation.csv
+XXX
 ```
 
-Next, we will evaluate and plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
+To evaluate the results, we need to:
+1. reassign the migrants to the correct LADs. 
+For example, people who migrated from `LAD-code-1 ---> LAD-code-2` should be added to the population file of `LAD-code-2`.
+This step is required since *Daedalus* works at LAD level.
+2. run validation code on the resulting population files.
 
-<p align="center">
-<img src="./figs/fig1.png" width="70%">
-</p>
+The above two steps can be run via one command line:
 
-In another [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_maps.ipynb),
-the results are plotted on maps. 
-We use the `cartopy` library to plot maps in this notebook. 
-`cartopy` is not installed by default. Please follow the instructions here:
+```bash
+python scripts/validation.py --input_data_dir output --persistent_data_dir persistent_data
+```
 
-https://scitools.org.uk/cartopy/docs/latest/installing.html
+The following command displays all available options:
 
-<p align="center">
-<img src="./figs/fig2.png" width="50%">
-</p>
-
-<p align="center">
-<img src="./figs/fig3.png" width="50%">
-</p>
-
-
-XXXXXXX
-
-The way to run the reassigment-validation is with this command line:
-
-`python scripts/validation.py --input_data_dir output --persistent_data_dir persistent_data`
+```bash
+python scripts/validation.py --help
+```
 
 in here `output` is where all the simulated files are and `persistent_data` is where the following ONS files are:
 
@@ -249,6 +235,29 @@ output
 
 Probably the best strategy to make sure everything works ok is to run the step one of the pipeline (the simulation) 
 for a few LADs and then run the validation on those outputs. Let me know if you have any questions/comments.
+
+
+
+Next, we will evaluate and plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
+
+<p align="center">
+<img src="./figs/fig1.png" width="70%">
+</p>
+
+In another [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_maps.ipynb),
+the results are plotted on maps. 
+We use the `cartopy` library to plot maps in this notebook. 
+`cartopy` is not installed by default. Please follow the instructions here:
+
+https://scitools.org.uk/cartopy/docs/latest/installing.html
+
+<p align="center">
+<img src="./figs/fig2.png" width="50%">
+</p>
+
+<p align="center">
+<img src="./figs/fig3.png" width="50%">
+</p>
 
 ## Configuration file
 
