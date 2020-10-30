@@ -152,6 +152,24 @@ Start simulation setup
 .
 .
 .
+2020-10-30 13:58:07.094 | DEBUG    | vivarium.framework.engine:step:140 - 2012-12-01 01:30:00
+Finished running simulation for year: 2
+2020-10-30 14:01:03
+
+In year:  2013
+alive 539883
+dead 8797
+emigrated 2984
+internal migration 551664
+New children 18547
+Immigrants 8904
+Finished running the full simulation
+alive 539883
+dead 8797
+emigrated 2984
+internal migration 551664
+New children 18547
+Immigrants 8904
 ```
 
 ## Speeding up simulations over several LADs by parallelization
@@ -193,7 +211,15 @@ the results are stored in a directory specified by `--output_dir`, e.g., `output
 In our example, it contains the following files:
 
 ```bash
-XXX
+output
+└── E08000032
+    ├── config_file_E08000032.yml
+    ├── ssm_E08000032_MSOA11_ppp_2011_processed.csv
+    ├── ssm_E08000032_MSOA11_ppp_2011_simulation.csv
+    ├── year_1
+    │   └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_1.csv
+    └── year_2
+        └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_2.csv
 ```
 
 To evaluate the results, we need to:
