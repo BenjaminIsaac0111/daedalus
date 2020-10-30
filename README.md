@@ -15,10 +15,10 @@
     <br/>
 </p>
 
-Daedalus is a novel dynamic spatial microsimulation pipeline that allows users to produce (custom) population projections for policy intervention analysis.
+*Daedalus* is a novel dynamic spatial microsimulation pipeline that allows users to produce (custom) population projections for policy intervention analysis.
 Currently, it provides simulation utilities for the whole of the United Kingdom at the local authority (LA) level.
 
-Daedalus is being developed in collaboration between Leeds Institute for Data Analytics and [the Alan Turing Institute](https://www.turing.ac.uk/) as 
+*Daedalus* is being developed in collaboration between Leeds Institute for Data Analytics and [the Alan Turing Institute](https://www.turing.ac.uk/) as 
 part of the SPENSER (Synthetic Population Estimation and Scenario Projection Model) project.
 
 Table of contents
@@ -37,7 +37,7 @@ We strongly recommend installation via Anaconda:
 
 * Refer to [Anaconda website and follow the instructions](https://docs.anaconda.com/anaconda/install/).
 
-* Create a new environment for daedalus:
+* Create a new environment for *Daedalus*:
 
 ```bash
 conda create -n daedalus python=3.7
@@ -49,13 +49,13 @@ conda create -n daedalus python=3.7
 conda activate daedalus
 ```
 
-* Clone daedalus source code:
+* Clone *Daedalus* source code:
 
 ```bash
 git clone https://github.com/alan-turing-institute/daedalus.git
 ```
 
-* Install daedalus and its dependencies:
+* Install *Daedalus* and its dependencies:
 
 ```
 cd /path/to/my/daedalus
@@ -66,7 +66,7 @@ pip install -v -e .
 
 ## Run Daedalus via command line
 
-Daedalus can be run via command line. The following command displays all available options:
+*Daedalus* can be run via command line. The following command displays all available options:
 
 ```bash
 python scripts/run.py --help
@@ -107,14 +107,14 @@ In the above command:
 
 * -c: the model config file in YAML format. For more information on the configuration file, 
 refer to [section: Configuration file](#configuration-file).
-* --location: target LAD code, here `E08000032`. Note that, daedalus can be run in parallel for several LADs, 
+* --location: target LAD code, here `E08000032`. Note that, *Daedalus* can be run in parallel for several LADs, 
 refer to [section: Speeding up simulations over several LADs by parallelization](#speeding-up-simulations-over-several-lads-by-parallelization)
 * --input_data_dir: the parent directory where population file is stored, e.g., `data` where `ssm_E08000032_MSOA11_ppp_2011.csv` is located.
 * --persistent_data_dir: the parent directory that contains all persistent data, e.g., rates, OD matrices and etc,
 refer to [section: Preparing datasets](#preparing-datasets) for details.
 * --output_dir: directory where the output files will be stored.
 
-As an example, when running the above command, daedalus store the results in the following directory structure:
+As an example, when running the above command, *Daedalus* store the results in the following directory structure:
 
 XXX
 
@@ -157,7 +157,7 @@ Start simulation setup
 
 In the previous [section](#run-daedalus-via-command-line), we ran the simulation over one LAD (specified by `--location E08000032`).
 The simulation took around 2 to 3 hours to finish. 
-To speed up the simulations over severals LADs, Daedalus can be run in parallel. 
+To speed up the simulations over severals LADs, *Daedalus* can be run in parallel. 
 For example, the following command runs various LAD codes (specified by  `--path_pop_files "data/ssm_*ppp*csv"`, wildcard accepted) 
 on five processes in parallel (specified by `--process_np`):
 
