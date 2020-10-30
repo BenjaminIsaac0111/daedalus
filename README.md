@@ -275,7 +275,6 @@ The following command displays all available options:
 python scripts/validation.py --help
 ```
 
-XXX
 Next, we plot the results in this [notebook]().
 
 <p align="center">
