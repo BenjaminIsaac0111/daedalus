@@ -18,7 +18,7 @@
 Daedalus is a novel dynamic spatial microsimulation pipeline that allows users to produce (custom) population projections for policy intervention analysis.
 Currently, it provides simulation utilities for the whole of the United Kingdom at the local authority (LA) level.
 
-Daedalus is being developed in collaboration between Leeds Institute for Institute Data Analytics and the Alan Turing Institute as 
+Daedalus is being developed in collaboration between Leeds Institute for Data Analytics and [the Alan Turing Institute](https://www.turing.ac.uk/) as 
 part of the SPENSER (Synthetic Population Estimation and Scenario Projection Model) project.
 
 Table of contents
