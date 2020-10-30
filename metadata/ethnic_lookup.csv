@@ -1,0 +1,28 @@
+"Base population file (persistent data) From ""C_ETHPUK11""",Rate to use (from NewEthpop outputs) Code,Rate to use (from NewEthpop outputs) Name
+"      ""0"": ""All categories: Ethnic group"",",N/A,N/A
+"      ""1"": ""White: Total"",",N/A,N/A
+"      ""2"": ""White: English/Welsh/Scottish/Northern Irish/British"",",WBI,"White: British, Irish, Gypsy, Irish Traveller"
+"      ""3"": ""White: Irish"",",WBI,"White: British, Irish, Gypsy, Irish Traveller"
+"      ""4"": ""White: Gypsy or Irish Traveller"",",WBI,"White: British, Irish, Gypsy, Irish Traveller"
+"      ""5"": ""White: Other White"",",WHO,White: Other White
+"      ""6"": ""Mixed/multiple ethnic group: Total"",",N/A,N/A
+"      ""7"": ""Mixed/multiple ethnic group: White and Black Caribbean"",",MIX,Mixed or Multiple Ethnic Groups
+"      ""8"": ""Mixed/multiple ethnic group: White and Black African"",",MIX,Mixed or Multiple Ethnic Groups
+"      ""9"": ""Mixed/multiple ethnic group: White and Asian"",",MIX,Mixed or Multiple Ethnic Groups
+"      ""10"": ""Mixed/multiple ethnic group: Other Mixed"",",MIX,Mixed or Multiple Ethnic Groups
+"      ""11"": ""Asian/Asian British: Total"",",N/A,N/A
+"      ""12"": ""Asian/Asian British: Indian"",",IND,Asian or Asian British: Indian
+"      ""13"": ""Asian/Asian British: Pakistani"",",PAK,Asian or Asian British: Pakistani
+"      ""14"": ""Asian/Asian British: Bangladeshi"",",BAN,Asian or Asian British: Bangladeshi
+"      ""15"": ""Asian/Asian British: Chinese"",",CHI,Asian or Asian British: Chinese
+"      ""16"": ""Asian/Asian British: Other Asian"",",OAS,Asian or Asian British: Other Asian
+"      ""17"": ""Black/African/Caribbean/Black British: Total"",",N/A,N/A
+"      ""18"": ""Black/African/Caribbean/Black British: African"",",BLA,Black or Black British: Black African
+"      ""19"": ""Black/African/Caribbean/Black British: Caribbean"",",BLC,Black or Black British: Black Caribbean
+"      ""20"": ""Black/African/Caribbean/Black British: Other Black"",",BLO,Black or Black British: Other Black
+"      ""21"": ""Other ethnic group: Total"",",N/A,N/A
+"      ""22"": ""Other ethnic group: Arab"",",OTH,Other Ethnic Group
+"      ""23"": ""Other ethnic group: Any other ethnic group""",OTH,Other Ethnic Group
+,,
+,,
+"Note ""N/A"" refers to the headline group (aggregation of sub-groups): we should be using the more detailed sub-group.",,
