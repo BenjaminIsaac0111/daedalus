@@ -13,6 +13,13 @@ class ImmigrationRateTable(BaseHandler):
         self.total_population_file = self.configuration.path_to_total_population_file
         self.total_immigrants = None
         self.location = self.configuration.location
+
+        # cater for LADs where rates are joing toguether.
+        if self.configuration.location == 'E09000001' or self.configuration.location == 'E09000033':
+            self.location = 'E09000001+E09000033'
+        if self.configuration.location == 'E06000052' or self.configuration.location == 'E06000053':
+            self.location = 'E06000052+E06000053'
+
         self.filename = f'immigration_rate_table_{self.location}_{self.configuration["scale_rates"][self.scaling_method]["immigration"]}.csv'
         self.rate_table_path = self.rate_table_dir + self.filename
 
