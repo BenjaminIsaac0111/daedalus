@@ -188,7 +188,7 @@ python scripts/parallel_run.py --help
 ## Evaluate and plot the results
 
 After running the simulation in [section: Run Daedalus via command line](#run-daedalus-via-command-line), 
-the results are stored in a directory as specified by `--output_dir`, e.g., `output` in the command above.
+the results are stored in a directory specified by `--output_dir`, e.g., `output` in the command above.
 In our example, it contains the following files:
 
 ```bash
@@ -197,30 +197,28 @@ XXX
 
 To evaluate the results, we need to:
 1. reassign the migrants to the correct LADs. 
-For example, people who migrated from `LAD-code-1 ---> LAD-code-2` should be added to the population file of `LAD-code-2`.
-This step is required since *Daedalus* works at LAD level.
+For example, people who migrated from `LAD_code_1 ---> LAD_code_2` should be added to the population file of `LAD_code_2`.
+This step is required since *Daedalus* works and stores the results at LAD level.
 2. run validation code on the resulting population files.
 
 The above two steps can be run via one command line:
 
 ```bash
-python scripts/validation.py --input_data_dir output --persistent_data_dir persistent_data
+XXX
+python scripts/validation.py --simulation_dir output --persistent_data_dir persistent_data
 ```
 
-The following command displays all available options:
+* --simulation_dir: directory where the simulated population files are stored, i.e., 
+output directory of a *Daedalus* simulation.
+* --persistent_data_dir: the parent directory that contains the following ONS files: 
+    - MYEB2_detailed_components_of_change_series_EW_(2019_geog20).csv 
+    - MYEB3_summary_components_of_change_series_UK_(2019_geog20).csv
+
+:warning: Note that the above command requires the following directory structure 
+(created by *Daedalus* command line in [section: Run Daedalus via command line](#run-daedalus-via-command-line)):
 
 ```bash
-python scripts/validation.py --help
-```
-
-in here `output` is where all the simulated files are and `persistent_data` is where the following ONS files are:
-
-- MYEB2_detailed_components_of_change_series_EW_(2019_geog20).csv 
-- MYEB3_summary_components_of_change_series_UK_(2019_geog20).csv
-
-For this to work, is important that the simulation files have the yearly structure, e.g:
-
-```bash
+XXX
 output
 └── E08000032
     ├── config_file_E08000032.yml
@@ -230,13 +228,15 @@ output
           └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_1.csv
     └── year_2
           └── ssm_E08000032_MSOA11_ppp_2011_simulation_year_2.csv
- 
 ```
 
-Probably the best strategy to make sure everything works ok is to run the step one of the pipeline (the simulation) 
-for a few LADs and then run the validation on those outputs. Let me know if you have any questions/comments.
+The following command displays all available options:
 
+```bash
+python scripts/validation.py --help
+```
 
+XXXX
 
 Next, we will evaluate and plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
 
