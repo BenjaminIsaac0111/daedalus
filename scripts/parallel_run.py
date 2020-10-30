@@ -126,7 +126,7 @@ if __name__ == "__main__":
     
     list_all_LADs = []
     for one_file in list_pop_files:
-        list_all_LADs.append(one_file.split("_")[1])
+        list_all_LADs.append(os.path.basename(one_file).split("_")[1])
     list_all_LADs.sort()
 
     run_parallel(run_pipeline_location_list, 
