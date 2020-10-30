@@ -275,13 +275,13 @@ The following command displays all available options:
 python scripts/validation.py --help
 ```
 
-Next, we plot the results in this [notebook](notebooks/pipeline_results_evaluation_plots.ipynb).
+Next, we plot the results in this [notebook](notebooks/pipeline_plot_results.ipynb).
 
 <p align="center">
-<img src="./figs/fig1.png" width="70%">
+<img src="./figs/fig1.png" width="100%">
 </p>
 
-In another [notebook](notebooks/pipeline_results_maps.ipynb),
+In another [notebook](notebooks/pipeline_plot_results_maps.ipynb),
 the results are plotted on maps. 
 We use the `cartopy` library to plot maps in this notebook. 
 `cartopy` is not installed by default. Please follow the instructions here:
@@ -289,11 +289,11 @@ We use the `cartopy` library to plot maps in this notebook.
 https://scitools.org.uk/cartopy/docs/latest/installing.html
 
 <p align="center">
-<img src="./figs/fig2.png" width="50%">
+<img src="./figs/fig2.png" width="70%">
 </p>
 
 <p align="center">
-<img src="./figs/fig3.png" width="50%">
+<img src="./figs/fig3.png" width="70%">
 </p>
 
 ## Preparing datasets
