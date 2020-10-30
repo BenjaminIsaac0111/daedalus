@@ -218,7 +218,7 @@ python scripts/parallel_run.py --help
 
 After running the simulation in [section: Run Daedalus via command line](#run-daedalus-via-command-line), 
 the results are stored in a directory specified by `--output_dir`, e.g., `output` in the command above.
-In our example, it contains the following files:
+In our example, it contains the following dirs/files:
 
 ```bash
 output
@@ -236,6 +236,10 @@ To evaluate the results, we need to:
 1. reassign the migrants to the correct LADs. 
 For example, people who migrated from `LAD_code_1 ---> LAD_code_2` should be added to the population file of `LAD_code_2`.
 This step is required since *Daedalus* works and stores the results at LAD level.
+
+:warning: Note that in the example of [section: Run Daedalus via command line](#run-daedalus-via-command-line),
+we simulated only one directory. However, in realistic examples, more than one LAD will be stored in `output` directory. 
+
 2. run validation code on the resulting population files.
 
 The above two steps can be run via one command line:
