@@ -158,52 +158,29 @@ Start simulation setup
 In the previous [section](#run-daedalus-via-command-line), we ran the simulation over one LAD (specified by `--location E08000032`).
 The simulation took around 2 to 3 hours to finish. 
 To speed up the simulations over severals LADs, Daedalus can be run in parallel. 
-For example, the following command line runs daedalus over five LADs in parallel 
-(note `--process_np` specifies the number of processes to be run in parallel):
+For example, the following command runs various LAD codes (specified by  `--path_pop_files "data/ssm_*ppp*csv"`, wildcard accepted) 
+on five processes in parallel (specified by `--process_np`):
 
 ```bash
 python scripts/parallel_run.py -c config/default_config.yaml --path_pop_files "data/ssm_*ppp*csv" --input_data_dir data --persistent_data_dir persistent_data --output_dir output --process_np 5
 ```
+
+In this command:
+
+* -c: the model config file in YAML format. For more information on the configuration file, 
+refer to [section: Configuration file](#configuration-file).
+* --path_pop_files: XXX path to population files, wildcard accepted
+* --input_data_dir: the parent directory where population file is stored, e.g., `data` where `ssm_E08000032_MSOA11_ppp_2011.csv` is located.
+* --persistent_data_dir: the parent directory that contains all persistent data, e.g., rates, OD matrices and etc,
+refer to [section: Preparing datasets](#preparing-datasets) for details.
+* --output_dir: directory where the output files will be stored.
+* --process_np: XXX number of processors to be used
 
 The following command displays all available options:
 
 ```bash
 python scripts/parallel_run.py --help
 ```
-
-and the output is:
-
-```bash
-usage: parallel_run.py [-h] -c config-file [--path_pop_files PATH_POP_FILES]
-                       [--pop_start_index POP_START_INDEX]
-                       [--pop_end_index POP_END_INDEX]
-                       [--input_data_dir INPUT_DATA_DIR]
-                       [--persistent_data_dir PERSISTENT_DATA_DIR]
-                       [--output_dir OUTPUT_DIR] [--process_np PROCESS_NP]
-
-Run Dynamic Microsimulation in parallel
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -c config-file, --config config-file
-                        the model config file (YAML)
-  --path_pop_files PATH_POP_FILES
-                        path to population files, wildcard accepted
-  --pop_start_index POP_START_INDEX
-                        pop_files[pop_start_index:pop_end_index] will be used
-  --pop_end_index POP_END_INDEX
-                        pop_files[pop_start_index:pop_end_index] will be used.
-                        If < 0, all files will be used.
-  --input_data_dir INPUT_DATA_DIR
-                        directory where the input data is
-  --persistent_data_dir PERSISTENT_DATA_DIR
-                        directory where the persistent data is
-  --output_dir OUTPUT_DIR
-                        directory where the output data is saved
-  --process_np PROCESS_NP
-                        number of processors to be used
-```
-
 
 ## Evaluate and plot the results
 
