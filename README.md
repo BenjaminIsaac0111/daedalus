@@ -9,8 +9,7 @@
     <a href="https://travis-ci.com/alan-turing-institute/daedalus.svg?branch=develop">
         <img alt="Travis" src="https://travis-ci.com/alan-turing-institute/daedalus.svg?branch=develop">
     </a>
-    
-    <a href="https://github.com/BenjaminIsaac0111/daedalus/blob/master/LICENSE">
+    <a href="https://github.com/alan-turing-institute/daedalus/blob/develop/LICENSE">
         <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
     </a>
     <br/>
