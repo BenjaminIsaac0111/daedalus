@@ -29,7 +29,8 @@ Table of contents
     * [Run Daedalus via command line](#run-daedalus-via-command-line)
     * [Speeding up simulations over several LADs by parallelization](#speeding-up-simulations-over-several-lads-by-parallelization)
     * [Evaluate the results](#evaluate-the-results)
-    * [Plot the results](#plot-the-results)
+    * [Preparing datasets](#preparing-datasets)
+    * [Configuration file](#configuration-file)
 
 # Installation 
 
@@ -259,34 +260,90 @@ https://scitools.org.uk/cartopy/docs/latest/installing.html
 <img src="./figs/fig3.png" width="50%">
 </p>
 
-## Configuration file
-
-XXX
-
 ## Preparing datasets
 
-XXX
+The following directories/files are needed to run a *Daedalus* simulation:
+
+* Configuration file. Refer to [section: Configuration file](#configuration-file). 
+* Directory that contains persistent datasets, e.g., 
+rate files (mortality, fertility, ...), OD matrices. See `persistent_data` directory on the repo.
+* For validation, the following files are needed:
+    - MYEB2_detailed_components_of_change_series_EW_(2019_geog20).csv 
+    - MYEB3_summary_components_of_change_series_UK_(2019_geog20).csv
+They are also stored in the `persistent_data` directory on the repo.
+* Directory that contains population files. For example, see `data` directory on the repo.
 
 ## Warning ⚠️
 
 If you are planning to run the microsimulation pipeline on the LADs 
-'E09000001', 'E09000033',  'E06000052' and 'E06000053' beware that these are not treated independently 
-on the rates as the rest of LADs. They are merged together in the following way: 
+`E09000001`, `E09000033`, `E06000052` and `E06000053` beware that 
+the rates of these LADs are merged in the following way:
 
-- 'E09000001+E09000033'
-- 'E06000052+E06000053'
+- `E09000001+E09000033`
+- `E06000052+E06000053`
 
-You should be able to run on the single LAD files independently, 
-but beware that the pipeline will be using the rates and total immigrated values for those LADs combined. 
+(For all other LADs, the rates are at individual level).
+
+It is still possible to run the simulations for `E09000001`, `E09000033`, `E06000052` and `E06000053` individually, 
+but the pipeline will use the combined rates and immigrated values as specified above. 
+
 The most appropriate way to deal with this is to run the microsimulation from a combined LAD starting file, 
-instead of individually. 
-
-E.g for the LADs E09000001 and E09000033:
+instead of individually. For example, to run the simulation for the LADs `E09000001+E09000033`, 
 
 1. Create a file named: `ssm_E09000001+E09000033_MSOA11_ppp_2011.csv` that contains 
-the starting population from both E09000001 and E09000033.
+the starting population from both `E09000001` and `E09000033`.
 2. Run the pipeline in the following way:
-`python scripts/run.py -c config/default_config.yaml --location E09000001+E09000033 --input_data_dir data --persistent_data_dir persistent_data --output_dir output`
 
-The equivalent should be done for 'E06000052' and 'E06000053' LADs.
+```bash
+python scripts/run.py -c config/default_config.yaml --location E09000001+E09000033 --input_data_dir data --persistent_data_dir persistent_data --output_dir output
+```
+
+Similarly, this should be done for `E06000052+E06000053` 
+
+## Configuration file
+
+*Daedalus* reads a config file specified by `-c` flag 
+(see [section: Run Daedalus via command line](#run-daedalus-via-command-line)).
+An example config file is provided on the repo, see: https://github.com/alan-turing-institute/daedalus/blob/feature/10-documentation/config/default_config.yaml
+
+This config file contains the following options:
+
+```yaml
+randomness:
+    key_columns: ['entrance_time', 'age']
+input_data:
+    location: 'UK'
+time:
+    start: {year: 2011, month: 1, day: 1}
+    end:   {year: 2012, month: 1, day: 1}
+    step_size: 30.4375  # Days
+    num_years: 2
+population:
+    age_start: 0
+    age_end: 100
+
+mortality_file: 'Mortality2011_LEEDS1_2.csv'
+fertility_file: 'Fertility2011_LEEDS1_2.csv'
+emigration_file: 'Emig_2011_2012_LEEDS2.csv'
+immigration_file: 'Immig_2011_2012_LEEDS2.csv'
+total_population_file: 'MY2011AGEN.csv'
+msoa_to_lad: 'Middle_Layer_Super_Output_Area__2011__to_Ward__2016__Lookup_in_England_and_Wales.csv'
+OD_matrix_dir: 'od_matrices'
+OD_matrix_index_file: 'MSOA_to_OD_index.csv'
+internal_outmigration_file: 'InternalOutmig2011_LEEDS2.csv'
+immigration_MSOA : 'Immigration_MSOA_M_F.csv'
+ethnic_lookup: 'ethnic_lookup.csv'
+components : [TestPopulation(),InternalMigration(), Mortality(), Emigration(), FertilityAgeSpecificRates(),Immigration()]
+scale_rates:
+    # methods:
+    # constant: all rates regardless of age/sex/... will be multiplied by the specified factor
+    #           if 1, the original rates will be usd
+    method: "constant"
+    constant:
+        mortality: 1
+        fertility: 1
+        emigration: 1
+        immigration: 1
+        internal_migration: 1
+```
 
