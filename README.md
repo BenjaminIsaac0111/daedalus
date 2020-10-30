@@ -275,13 +275,13 @@ The following command displays all available options:
 python scripts/validation.py --help
 ```
 
-Next, we plot the results in this [notebook]().
+Next, we plot the results in this [notebook](notebooks/pipeline_results_evaluation_plots.ipynb).
 
 <p align="center">
 <img src="./figs/fig1.png" width="70%">
 </p>
 
-In another [notebook](),
+In another [notebook](notebooks/pipeline_results_maps.ipynb),
 the results are plotted on maps. 
 We use the `cartopy` library to plot maps in this notebook. 
 `cartopy` is not installed by default. Please follow the instructions here:
@@ -340,7 +340,7 @@ Similarly, this should be done for `E06000052+E06000053`
 
 *Daedalus* reads a config file specified by `-c` flag 
 (see [section: Run Daedalus via command line](#run-daedalus-via-command-line)).
-An example config file is provided on the repo, see: https://github.com/alan-turing-institute/daedalus/blob/feature/10-documentation/config/default_config.yaml
+An example config file is provided on the repo, see: config/default_config.yaml
 
 This config file contains the following options:
 
