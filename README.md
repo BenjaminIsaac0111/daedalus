@@ -6,6 +6,10 @@
     <!--- <a href="https://zenodo.org/badge/latestdoi/232834194">
         <img alt="DOI" src="https://zenodo.org/badge/232834194.svg">
     </a> --->
+    <a href="https://travis-ci.com/alan-turing-institute/daedalus.svg?branch=develop">
+        <img alt="Travis" src="https://travis-ci.com/alan-turing-institute/daedalus.svg?branch=develop">
+    </a>
+    
     <a href="https://github.com/BenjaminIsaac0111/daedalus/blob/master/LICENSE">
         <img alt="License" src="https://img.shields.io/badge/License-MIT-yellow.svg">
     </a>
