@@ -245,7 +245,6 @@ we simulated only one directory. However, in realistic examples, more than one L
 The above two steps can be run via one command line:
 
 ```bash
-XXX
 python scripts/validation.py --simulation_dir output --persistent_data_dir persistent_data
 ```
 
@@ -277,9 +276,8 @@ The following command displays all available options:
 python scripts/validation.py --help
 ```
 
-XXXX
-
-Next, we will evaluate and plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
+XXX
+Next, we plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
 
 <p align="center">
 <img src="./figs/fig1.png" width="70%">
@@ -348,6 +346,9 @@ An example config file is provided on the repo, see: https://github.com/alan-tur
 
 This config file contains the following options:
 
+* Start/end time, number of years and step size (in days) for a simulation as well as 
+the min/max ages of the simulated population.
+
 ```yaml
 randomness:
     key_columns: ['entrance_time', 'age']
@@ -361,7 +362,11 @@ time:
 population:
     age_start: 0
     age_end: 100
+```
 
+* File/dir-names of the rates (different components), conversion from MSOA and LAD, ethnicity lookup table and OD matrices.
+
+```yaml
 mortality_file: 'Mortality2011_LEEDS1_2.csv'
 fertility_file: 'Fertility2011_LEEDS1_2.csv'
 emigration_file: 'Emig_2011_2012_LEEDS2.csv'
@@ -373,7 +378,19 @@ OD_matrix_index_file: 'MSOA_to_OD_index.csv'
 internal_outmigration_file: 'InternalOutmig2011_LEEDS2.csv'
 immigration_MSOA : 'Immigration_MSOA_M_F.csv'
 ethnic_lookup: 'ethnic_lookup.csv'
+```
+
+* Components to be used in simulation. For a realistic simulation, all components should be included.
+
+```yaml
 components : [TestPopulation(),InternalMigration(), Mortality(), Emigration(), FertilityAgeSpecificRates(),Immigration()]
+```
+
+* In this part of the config file, rate tables of each component can be scaled by a constant factor.
+This can be used for sensitivity analysis and hypothesis-driven tests, e.g., how the population would change 
+if the rates (of one or more components) would be increased or decreased by a constant factor.
+
+```yaml
 scale_rates:
     # methods:
     # constant: all rates regardless of age/sex/... will be multiplied by the specified factor
