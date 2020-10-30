@@ -277,13 +277,13 @@ python scripts/validation.py --help
 ```
 
 XXX
-Next, we plot the results in this [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_evaluation_plots.ipynb).
+Next, we plot the results in this [notebook]().
 
 <p align="center">
 <img src="./figs/fig1.png" width="70%">
 </p>
 
-In another [notebook](https://github.com/BenjaminIsaac0111/daedalus/blob/feature/refactoring_pipeline/notebooks/pipeline_results_maps.ipynb),
+In another [notebook](),
 the results are plotted on maps. 
 We use the `cartopy` library to plot maps in this notebook. 
 `cartopy` is not installed by default. Please follow the instructions here:
