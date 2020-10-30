@@ -67,7 +67,7 @@ def run_validation(location, input_location_path, persistent_data_dir):
         os.path.join(output_dir, 'comparison_summary_' + location + '_cumulative_sum_' + str(year) + '.csv'))
 
 
-def run_all_validations(simulation_dir, persistent_data_dir):
+def run_all_validations(simulation_dir, persistent_data_dir, list_pop_locations_dir, pool_migrants):
     """
     Run validation comparison in all existing locations present in a directory
 
@@ -75,17 +75,9 @@ def run_all_validations(simulation_dir, persistent_data_dir):
         Path where the outputs of all simulations are found
     persistent_data_dir: str
         Path to the directory where the ONS files are found.
-
+    list_pop_locations_dir: list
+    pool_migrants: pandas DataFrame
     """
-
-    list_pop_locations_dir = [i for i in os.listdir(simulation_dir) if i.startswith('E')]
-
-    print ('-------------------------------------------------------------')
-    print ('Getting pool of individuals that migrated internally between LADs')
-    print ('-------------------------------------------------------------')
-    print()
-
-    pool_migrants = get_migrants(simulation_dir, list_pop_locations_dir)
 
     for location in list_pop_locations_dir:
         print('----------------------------------------------')
@@ -101,7 +93,6 @@ def run_all_validations(simulation_dir, persistent_data_dir):
 
         run_validation(location,os.path.join(simulation_dir,location),persistent_data_dir)
 
-
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Validation of the dynamic microsimulation")
@@ -111,11 +102,21 @@ if __name__ == "__main__":
     parser.add_argument('--location', help='LAD code (in case you want to run a specific location)', default=None)
 
     args = parser.parse_args()
+
+    list_pop_locations_dir = [i for i in os.listdir(args.simulation_dir) if i.startswith('E')]
+
+    print ('-------------------------------------------------------------')
+    print ('Getting pool of individuals that migrated internally between LADs')
+    print ('-------------------------------------------------------------')
+    print()
+
+    pool_migrants = get_migrants(args.simulation_dir, list_pop_locations_dir)
+
     if args.location:
+        reassign_internal_migration_to_LAD(args.location, args.simulation_dir, pool_migrants)
         # if location is given as an input, then only run validation in that location
         run_validation(args.location, os.path.join(args.simulation_dir,args.location), args.persistent_data_dir)
     else:
         # if no location is given as an input, then run validation in all locations in that path
-
-        run_all_validations(args.simulation_dir, args.persistent_data_dir)
+        run_all_validations(args.simulation_dir, args.persistent_data_dir, list_pop_locations_dir, pool_migrants)
 

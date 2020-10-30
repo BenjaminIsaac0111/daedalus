@@ -119,6 +119,9 @@ def reassign_internal_migration_to_LAD(location, input_path, pool_migrants):
     simulation_data_full = pd.read_csv(os.path.join(input_location_path,
                                                    'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'), dtype=columns_dtypes)
 
+    simulation_data_full.loc[:,'duplicate'] = False
+    simulation_data_full.loc[:,'internal_migration_in'] = 'No'
+
     data_location_simulation_full = pool_migrants['full']
 
     data_location_simulation_full = data_location_simulation_full[data_location_simulation_full['location'] == location]
