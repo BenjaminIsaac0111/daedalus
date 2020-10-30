@@ -159,7 +159,7 @@ In the previous [section](#run-daedalus-via-command-line), we ran the simulation
 The simulation took around 2 to 3 hours to finish. 
 To speed up the simulations over severals LADs, *Daedalus* can be run in parallel. 
 For example, the following command runs various LAD codes (specified by  `--path_pop_files "data/ssm_*ppp*csv"`, wildcard accepted) 
-on five processes in parallel (specified by `--process_np`):
+on five processes in parallel (specified by `--process_np 5`):
 
 ```bash
 python scripts/parallel_run.py -c config/default_config.yaml --path_pop_files "data/ssm_*ppp*csv" --input_data_dir data --persistent_data_dir persistent_data --output_dir output --process_np 5
@@ -169,12 +169,15 @@ In this command:
 
 * -c: the model config file in YAML format. For more information on the configuration file, 
 refer to [section: Configuration file](#configuration-file).
-* --path_pop_files: XXX path to population files, wildcard accepted
-* --input_data_dir: the parent directory where population file is stored, e.g., `data` where `ssm_E08000032_MSOA11_ppp_2011.csv` is located.
+* --path_pop_files: path to population files, wildcard accepted. 
+LAD codes are extracted from the filenames specified in this argument, e.g., 
+in the example, `--path_pop_files "data/ssm_*ppp*csv"`, LAD codes of all files `ssm_*ppp*csv` will be used. 
+* --input_data_dir: the parent directory where population file is stored, e.g., `data` where `ssm_*ppp*csv` are located.
 * --persistent_data_dir: the parent directory that contains all persistent data, e.g., rates, OD matrices and etc,
 refer to [section: Preparing datasets](#preparing-datasets) for details.
 * --output_dir: directory where the output files will be stored.
-* --process_np: XXX number of processors to be used
+* --process_np: number of processors to be used.
+All detected LAD codes will be distributed over the requested number of processes.
 
 The following command displays all available options:
 
