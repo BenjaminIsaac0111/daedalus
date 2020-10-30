@@ -218,7 +218,7 @@ python scripts/parallel_run.py --help
 
 After running the simulation in [section: Run Daedalus via command line](#run-daedalus-via-command-line), 
 the results are stored in a directory specified by `--output_dir`, e.g., `output` in the command above.
-In our example, it contains the following dirs/files:
+In our example, it contains the following dirs/files because we ran the simulation for 2 years:
 
 ```bash
 output
@@ -255,7 +255,7 @@ output directory of a *Daedalus* simulation.
     - MYEB3_summary_components_of_change_series_UK_(2019_geog20).csv
 
 :warning: Note that the above command requires the following directory structure 
-(created by *Daedalus* command line in [section: Run Daedalus via command line](#run-daedalus-via-command-line)):
+(created by *Daedalus* command line in [section: Run Daedalus via command line](#run-daedalus-via-command-line)). If by any reason the simulation process  for an LAD is not completed, this directory structure might be different (e.g maybe only one year got saved) and the validation code will break when it is trying to find  files in this structure. To solve this, you will need to remove the LAD directories where the simulation did not fully finish:
 
 ```bash
 output
