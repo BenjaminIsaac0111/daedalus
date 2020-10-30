@@ -258,7 +258,6 @@ output directory of a *Daedalus* simulation.
 (created by *Daedalus* command line in [section: Run Daedalus via command line](#run-daedalus-via-command-line)):
 
 ```bash
-XXX
 output
 └── E08000032
     ├── config_file_E08000032.yml
