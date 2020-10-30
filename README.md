@@ -37,7 +37,7 @@ We strongly recommend installation via Anaconda:
 
 * Refer to [Anaconda website and follow the instructions](https://docs.anaconda.com/anaconda/install/).
 
-* Create a new environment for daedalus
+* Create a new environment for daedalus:
 
 ```bash
 conda create -n daedalus python=3.7
@@ -52,7 +52,7 @@ conda activate daedalus
 * Clone daedalus source code:
 
 ```bash
-git clone https://github.com/BenjaminIsaac0111/daedalus.git 
+git clone https://github.com/alan-turing-institute/daedalus.git
 ```
 
 * Install daedalus and its dependencies:
