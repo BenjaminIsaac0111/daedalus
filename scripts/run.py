@@ -1,131 +1,164 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import time
+import os
+import vivarium
 import pandas as pd
 import datetime
 import daedalus.utils as utils
+import argparse
+import yaml
+from daedalus.VphSpenserPipeline.RunPipeline import RunPipeline
 
-from vivarium import InteractiveContext
-from vivarium_public_health.population.spenser_population import TestPopulation
-from vivarium_public_health.population import FertilityAgeSpecificRates
-from vivarium_public_health.population import Mortality
-from vivarium_public_health.population import Emigration
-from vivarium_public_health.population import ImmigrationDeterministic as Immigration
-from vivarium_public_health.population.spenser_population import transform_rate_table
-from vivarium_public_health.population.spenser_population import compute_migration_rates
-from vivarium_public_health.population import InternalMigration
 
-from daedalus.RateTables.EmigrationRateTable import EmigrationRateTable
-from daedalus.RateTables.MortalityRateTable import MortalityRateTable
-from daedalus.RateTables.FertilityRateTable import FertilityRateTable
-from daedalus.RateTables.ImmigrationRateTable import ImmigrationRateTable
-from daedalus.RateTables.InternalMigrationMatrix import InternalMigrationMatrix
-from daedalus.RateTables.InternalMigrationRateTable import InternalMigrationRateTable
+def run_pipeline(configuration_file, location=None, input_data_dir=None, persistent_data_dir=None, output_dir=None):
+    """
+    Given an basic input config file and data directory information configure the
+     vivarium public health spenser pipeline and run it.
 
-def main(configuration):
-    """ Run the daedalus Microsimulation """
+    Parameters
+    ----------
+    config : ConfigTree
+        Config file to run the pipeline
+    location: str
+        LAD code for place to run the simulation
+    input_data_dir: str
+        Path to the directory with the input data
+    persistent_data_dir: str
+        Path to the directory where the rate/probability/demographic files that needed to run the simulation are found.
+    output_dir: str
+        Path to the directory where the output data should be saved
+    """
 
-    # Set up the components using the configuration.
+    config = utils.get_config(configuration_file)
 
-    # TODO: test population initialisation with all West Yorkshire regions.
-    #  - The code for this is in daedalus/PopulationSynthesis/*.
-    #  - Make sure if region population files already exist in the cache then no need to run initialisation.
-    utils.prepare_dataset(configuration.paths.path_to_raw_pop_file, configuration.paths.path_to_pop_file)
+    ## get the input information obtained from the CLI
+    if location:
+        config.update({
+            'location': location,
+            }, source=str(Path(__file__).resolve()))
+    else:
+        try:
+            location = config.location
+        except:
+            raise RuntimeError('There is no location information in the default '
+                               'config file, please provide one with the --location flag')
 
-    start_population_size = len(pd.read_csv(configuration.paths.path_to_pop_file))
+
+    if input_data_dir:
+        config.update({
+            'input_data_dir': input_data_dir,
+        }, source=str(Path(__file__).resolve()))
+    else:
+        try:
+            input_data_dir = config.input_data_dir
+        except:
+            raise RuntimeError('There is no input_data_dir information in the default '
+                  'config file, please provide one with the --input_data_dir flag')
+
+    if persistent_data_dir:
+        persistent_data_dir = persistent_data_dir
+        config.update({
+            'persistent_data_dir': persistent_data_dir,
+        }, source=str(Path(__file__).resolve()))
+    else:
+        try:
+            persistent_data_dir = config.persistent_data_dir
+        except:
+            raise RuntimeError('There is no persistent_data_dir information in the default '
+                  'config file, please provide one with the --persistent_data_dir flag')
+
+    if output_dir:
+        output_dir = output_dir
+        config.update({
+            'output_dir': output_dir,
+        }, source=str(Path(__file__).resolve()))
+    else:
+        try:
+            output_dir = config.output_dir
+        except:
+            raise RuntimeError('There is no output_dir information in the default '
+                  'config file, please provide one with the --output_dir flag')
+
+    # based on input location, get the input files that will be used in the simulation
+    input_data_raw_filename = 'ssm_' + location + '_MSOA11_ppp_2011.csv'
+    input_data_processed_filename = 'ssm_' + location + '_MSOA11_ppp_2011_processed.csv'
+
+    start_population_size = len(pd.read_csv("{}/{}".format(input_data_dir, input_data_raw_filename)))
     print('Start Population Size: {}'.format(start_population_size))
 
-    configuration.update({
-        'population': {
-            'population_size': start_population_size,
-            'age_start': 0,
-            'age_end': 100,
-        }
+    # output directory where all files from the run will be saved
+    run_output_dir = os.path.join(output_dir, location)
+    # put output plots in the results dir
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(run_output_dir, exist_ok=True)
+
+    # save the yml file with the minimal amount of information needed to run this script again and reproduce results
+    with open(os.path.join(run_output_dir, 'config_file_'+location+'.yml'), 'w') as config_file:
+        yaml.dump(config.to_dict(), config_file)
+        print("Write config file successful")
+
+    # add extra information to the config file that is needed for the RunPipeline function
+    config.update({
+
+        'path_to_raw_pop_file': "{}/{}".format(input_data_dir, input_data_raw_filename),
+        'path_to_pop_file': "{}/{}".format(run_output_dir, input_data_processed_filename),
+        'path_to_mortality_file': "{}/{}".format(persistent_data_dir, config.mortality_file),
+        'path_to_fertility_file': "{}/{}".format(persistent_data_dir, config.fertility_file),
+        'path_to_emigration_file': "{}/{}".format(persistent_data_dir, config.emigration_file),
+        'path_to_immigration_file': "{}/{}".format(persistent_data_dir, config.immigration_file),
+        'path_to_total_population_file': "{}/{}".format(persistent_data_dir, config.total_population_file),
+        'path_msoa_to_lad': "{}/{}".format(persistent_data_dir, config.msoa_to_lad),
+        'path_to_OD_matrices': "{}/{}".format(persistent_data_dir, config.OD_matrix_dir),
+        'path_to_OD_matrix_index_file': "{}/{}/{}".format(persistent_data_dir, config.OD_matrix_dir,
+                                                          config.OD_matrix_index_file),
+        'path_to_internal_outmigration_file': "{}/{}".format(persistent_data_dir,
+                                                             config.internal_outmigration_file),
+        'path_to_immigration_MSOA': "{}/{}".format(persistent_data_dir, config.immigration_MSOA),
+
     }, source=str(Path(__file__).resolve()))
 
+    # process the raw input data into a VPH format with the right variables
+    utils.prepare_dataset(config.path_to_raw_pop_file, config.path_to_pop_file,
+                          location_code=location,
+                          lookup_ethnicity="{}/{}".format(persistent_data_dir, config.ethnic_lookup),
+                          loopup_location_code=config.path_msoa_to_lad)
 
-    components = [TestPopulation(),Immigration(),
-                  FertilityAgeSpecificRates(),Mortality(),Emigration()]
-                #,,InternalMigration()
-                #  Mortality(),
-                #  Emigration(),
-                #  Immigration(),
-                #  InternalMigration()]
+    # run the pipeline
+    pop = RunPipeline(config, start_population_size)
 
-    simulation = InteractiveContext(components=components,
-                                    configuration=configuration,
-                                    plugin_configuration=utils.base_plugins(),
-                                    setup=False)
+    print('Finished running the full simulation')
+    # save the output file to csv
+    output_data_filename = 'ssm_' + location + '_MSOA11_ppp_2011_simulation.csv'
+    pop.to_csv(os.path.join(run_output_dir, output_data_filename))
 
-    num_days = 365*2
+ # print some summary stats on the simulation
+    print('alive', len(pop[pop['alive'] == 'alive']))
 
-    # setup internal migration matrices
-
-    OD_matrices = InternalMigrationMatrix(configuration=configuration)
-    OD_matrices.set_matrix_tables()
-    simulation._data.write("internal_migration.MSOA_index", OD_matrices.MSOA_location_index)
-    simulation._data.write("internal_migration.LAD_index", OD_matrices.LAD_location_index)
-    simulation._data.write("internal_migration.MSOA_LAD_indices", OD_matrices.df_OD_matrix_with_LAD)
-    simulation._data.write("internal_migration.path_to_OD_matrices", configuration.paths.path_to_OD_matrices)
-
-    simulation._data.write("cause.all_causes.immigration_to_MSOA", pd.read_csv(configuration.path_to_immigration_MSOA))
-
-    # setup internal migraionts rates
-    asfr_int_migration = InternalMigrationRateTable(configuration=configuration)
-    asfr_int_migration.set_rate_table()
-    simulation._data.write("cause.age_specific_internal_outmigration_rate", asfr_int_migration.rate_table)
-
-    # setup mortality rates
-    asfr_mortality = MortalityRateTable(configuration=configuration)
-    asfr_mortality.set_rate_table()
-    simulation._data.write("cause.all_causes.cause_specific_mortality_rate",
-                           asfr_mortality.rate_table)
-
-    # setup fertility rates
-    asfr_fertility = FertilityRateTable(configuration=configuration)
-    asfr_fertility.set_rate_table()
-    simulation._data.write("covariate.age_specific_fertility_rate.estimate",
-                           asfr_fertility.rate_table)
-
-    # setup emigration rates
-
-    asfr_emigration = EmigrationRateTable(configuration=configuration)
-    asfr_emigration.set_rate_table()
-    simulation._data.write("covariate.age_specific_migration_rate.estimate",
-                           asfr_emigration.rate_table)
-
-    # setup immigration rates
-    asfr_immigration = ImmigrationRateTable(configuration=configuration)
-    asfr_immigration.set_rate_table()
-    asfr_immigration.set_total_immigrants()
-    simulation._data.write("cause.all_causes.cause_specific_immigration_rate",
-                           asfr_immigration.rate_table)
-    simulation._data.write("cause.all_causes.cause_specific_total_immigrants_per_year",
-                           asfr_immigration.total_immigrants)
-
-    print ('Start simulation setup')
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    simulation.setup()
-
-    print ('Start running simulation')
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    simulation.run_for(duration=pd.Timedelta(days=num_days))
-
-    print('Finished running simulation')
-    print(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    pop = simulation.get_population()
-    print(pop.head())
-
-    pop.to_csv('./output/test_output.csv')
-
-    print ('alive',len(pop[pop['alive']=='alive']))
-    print ('dead',len(pop[pop['alive']=='dead']))
-    print ('emigrated',len(pop[pop['alive']=='emigrated']))
-    print ('internal migration',len(pop[pop['previous_MSOA_locations']!='']))
-    print ('New children',len(pop[pop['parent_id']!=-1]))
-    print ('Immigrants',len(pop[pop['MSOA'].astype(str)=='nan']))
-
+    if 'Mortality()' in config.components:
+        print('dead', len(pop[pop['alive'] == 'dead']))
+    if 'Emigration()' in config.components:
+        print('emigrated', len(pop[pop['alive'] == 'emigrated']))
+    if 'InternalMigration()' in config.components:
+        print('internal migration', len(pop[pop['internal_outmigration'] != '']))
+    if 'FertilityAgeSpecificRates()' in config.components:
+        print('New children', len(pop[pop['parent_id'] != -1]))
+    if 'Immigration()' in config.components:
+        print('Immigrants', len(pop[pop['immigrated'].astype(str) == 'Yes']))
 
 
 if __name__ == "__main__":
-    main(configuration=utils.get_config())
+
+    parser = argparse.ArgumentParser(description="Dynamic Microsimulation")
+
+    parser.add_argument("-c", "--config", required=True, type=str, metavar="config-file",
+                        help="the model config file (YAML)")
+    parser.add_argument('--location', help='LAD code', default=None)
+    parser.add_argument('--input_data_dir', help='directory where the input data is', default=None)
+    parser.add_argument('--persistent_data_dir', help='directory where the persistent data is', default=None)
+    parser.add_argument('--output_dir', type=str, help='directory where the output data is saved', default=None)
+
+    args = parser.parse_args()
+    configuration_file = args.config
+
+    run_pipeline(configuration_file, args.location, args.input_data_dir, args.persistent_data_dir, args.output_dir)

@@ -3,26 +3,22 @@ utility functions
 """
 
 import argparse
+import glob
 import yaml
 import numpy as np
+import os
 import pandas as pd
 #import humanleague as hl
+from scipy.sparse import coo_matrix
+import scipy
 
 from vivarium.config_tree import ConfigTree
 
 
-def get_config():
-    # TODO need to reintroduce the andrews original microsimulation and configuration to initialise the new dynamic
-    #  microsimulation. Could rely on the vivarium config file somehow?
-    parser = argparse.ArgumentParser(description="Dynamic Microsimulation")
+def get_config(config):
 
-    parser.add_argument("-c", "--config", required=True, type=str, metavar="config-file",
-                        help="the model configuration file (YAML)")
-
-    # TODO parse/add arguments for synthetic population generation for LADs.
-    args = parser.parse_args()
-    # Open the vivarium configuration yaml.
-    with open(args.config) as config_file:
+    # Open the vivarium config yaml.
+    with open(config) as config_file:
         config = ConfigTree(yaml.full_load(config_file))
     return config
 
@@ -30,7 +26,7 @@ def get_config():
 def base_plugins():
     config = {'required': {
                   'data': {
-                      'controller': 'vivarium_public_health.testing.mock_artifact.MockArtifactManager',
+                      'controller': 'vivarium_population_spenser.testing.mock_artifact.MockArtifactManager',
                       'builder_interface': 'vivarium.framework.artifact.ArtifactInterface'
                   }
              }
@@ -263,9 +259,12 @@ def prepare_dataset(dataset_path="../daedalus/persistent_data/ssm_E08000032_MSOA
         code_ethnicity = dict(zip(lookup['Base population file (persistent data) From "C_ETHPUK11"'],
                                   lookup['Rate to use (from NewEthpop outputs) Code']))
         dataset.replace({"ethnicity": code_ethnicity}, inplace=True)
-        print("\n\nWARNING: BLO ethnicity is removed from the dataset")
-        dataset = dataset[~dataset['ethnicity'].isin(["BLO"])]
     if location_code:
+        if location_code == 'E09000001' or location_code == 'E09000033':
+            location_code = 'E09000001+E09000033'
+        if location_code == 'E06000052' or location_code == 'E06000053':
+            location_code = 'E06000052+E06000053'
+
         dataset['MSOA'] = dataset['location']
         dataset['location'] = location_code
     else:
@@ -279,3 +278,63 @@ def prepare_dataset(dataset_path="../daedalus/persistent_data/ssm_E08000032_MSOA
     dataset.to_csv(output_path, index=False)
     print(f"\nWrite the dataset at: {output_path}")
 
+
+def make_od_matrices_sparse(path2csv, row_threshold=10):
+    """Make OD matrices sparse
+
+    Args:
+        path2csv: path to csv files, wildcards are accepted
+        row_threshold (int, optional): all values less than row_max / row_threshold will be set to zero. Defaults to 10.
+    """
+
+    list_of_files = glob.glob(path2csv)
+
+    for i, fi_rel in enumerate(list_of_files):
+        fi = os.path.abspath(fi_rel)
+        print(f"Processing: {fi}")
+        
+        od_weights = pd.read_csv(fi).values
+        od_val_w = od_weights[:, 1:]
+        od_val_w = od_val_w.astype(np.float)
+        
+        # weights ---> probability distributions for each row
+        od_val_w = od_val_w/np.sum(od_val_w, axis=1)[:, None]
+    
+        for j in range(od_val_w.shape[0]):
+            row_threshold_adjust = np.max(od_val_w[j, :]) / row_threshold
+            od_val_w[j, od_val_w[j, :] < row_threshold_adjust] = 0
+        
+        od_val_sparse = coo_matrix(od_val_w)
+        scipy.sparse.save_npz(os.path.basename(fi).split(".csv")[0] + ".npz", od_val_sparse)
+
+
+def get_age_bucket(simulation_data):
+    """
+    Assign age bucket to an input population. These are the age buckets:
+    0 - 15;
+    16 - 19;
+    20 - 24;
+    25 - 29;
+    30 - 44;
+    45 - 59;
+    60 - 74;
+    75 +
+
+    Parameters
+    ----------
+    simulation_data : Dataframe
+        Input data from the VPH simulation
+
+    Returns:
+    -------
+    A dataframe with a new column with the age bucket.
+
+    """
+    # Age buckets based on the file names 
+
+
+    cut_bins = [-1, 16, 20, 25, 30, 45, 60, 75, 200]
+    cut_labels = ["0to15", "16to19", "20to24", "25to29", "30to44", "45to59", "60to74", "75plus"]
+    simulation_data.loc[:, "age_bucket"] = pd.cut(simulation_data['age'], bins=cut_bins, labels=cut_labels)
+
+    return simulation_data
